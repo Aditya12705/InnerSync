@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext.jsx';
 import {
   Zap,
   Users,
@@ -33,6 +34,7 @@ const formatDistanceToNow = (date) => {
 };
 
 export function StudentDashboard() {
+  const { user } = useAuth();
   // ... state and effects (remained same)
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -82,7 +84,7 @@ export function StudentDashboard() {
         <div className={styles.heroContent}>
           <div className={styles.welcomeWrapper}>
             <LayoutDashboard className={styles.welcomeIcon} />
-            <h1 className={styles.welcome}>Welcome back, {summary?.studentName || 'Student'}!</h1>
+            <h1 className={styles.welcome}>Welcome back, {user?.name || summary?.studentName || 'Student'}!</h1>
           </div>
           <p className={styles.subtitle}>Your space for mental clarity and support.</p>
           {loading ? (

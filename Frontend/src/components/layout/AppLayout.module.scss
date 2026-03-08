@@ -556,7 +556,9 @@
   }
 
   .user-menu .dropdown-toggle {
-    span {
+
+    .userNameText,
+    .caret {
       display: none;
     }
 

@@ -119,7 +119,7 @@ export function AppLayout() {
                     aria-expanded={dropdownOpen}
                     aria-haspopup="true"
                   >
-                    {user?.name || (adminLoggedIn ? 'Counsellor' : 'User')}
+                    <span className={styles.userNameText}>{user?.name || (adminLoggedIn ? 'Counsellor' : 'User')}</span>
                     <ChevronDown size={16} className="caret" />
                   </button>
                   <div
