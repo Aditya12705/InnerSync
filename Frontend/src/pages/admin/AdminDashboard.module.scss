@@ -1,0 +1,312 @@
+.dashboardContainer {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 24px 40px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  h1 {
+    font-family: var(--font-serif);
+    font-size: 28px;
+    margin: 0;
+    color: var(--secondary-dark);
+    font-weight: 700;
+  }
+}
+
+.logo {
+  height: 60px;
+  object-fit: contain;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.adminStatus {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--success);
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.statusDot {
+  width: 12px;
+  height: 12px;
+  background-color: var(--success);
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(102, 178, 178, 0.4);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.6;
+    transform: scale(0.9);
+  }
+}
+
+.logoutBtn {
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition);
+
+  &:hover {
+    background: rgba(239, 68, 68, 0.05);
+    border-color: var(--danger);
+  }
+}
+
+.statsSection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.statCard {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary-light);
+  }
+}
+
+.statIcon {
+  color: var(--primary);
+  background: var(--bg-header-footer);
+  padding: 16px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.statContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.statValue {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--secondary-dark);
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr;
+  gap: 32px;
+}
+
+.mainContent,
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h3 {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 22px;
+    color: var(--secondary-dark);
+  }
+}
+
+.cardIcon {
+  color: var(--primary);
+  opacity: 0.8;
+}
+
+.activityList,
+.actionList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.activityItem {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  padding: 16px;
+  background: var(--bg-header-footer);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  transition: var(--transition);
+
+  &:hover {
+    background: white;
+    border-color: var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+}
+
+.activityIcon {
+  color: var(--primary);
+}
+
+.activityContent {
+  flex: 1;
+}
+
+.activityTitle {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.activityTime {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.actionBtn {
+  width: 100%;
+  padding: 18px 24px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  transition: var(--transition);
+
+  &:hover {
+    background: var(--bg-header-footer);
+    border-color: var(--primary-light);
+    transform: translateX(6px);
+  }
+}
+
+.actionIcon {
+  color: var(--primary);
+}
+
+// Sidebar Appointment List
+.appointmentList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.appointmentItem {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px;
+  background: var(--bg-header-footer);
+  border-radius: var(--radius-md);
+  transition: var(--transition);
+  border: 1px solid transparent;
+
+  &:hover {
+    background: white;
+    border-color: var(--primary-light);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .appointmentTime {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--primary);
+    min-width: 70px;
+    background: white;
+    padding: 8px;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+
+  .appointmentDetails {
+    flex: 1;
+  }
+
+  .appointmentTitle {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--secondary-dark);
+    margin-bottom: 2px;
+  }
+
+  .appointmentDate {
+    font-size: 13px;
+    color: var(--muted);
+  }
+}
+
+@media (max-width: 1200px) {
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+}

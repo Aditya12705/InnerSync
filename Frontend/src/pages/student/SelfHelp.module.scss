@@ -1,0 +1,653 @@
+.selfHelpContainer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header {
+    margin-bottom: 40px;
+    text-align: center;
+
+    h1 {
+        font-family: var(--font-serif);
+        font-size: 36px;
+        color: var(--secondary-dark);
+        margin-bottom: 12px;
+    }
+
+    p {
+        color: var(--text-secondary);
+        font-size: 18px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 48px;
+    background: white;
+    padding: 12px 24px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+
+    .filterLabel {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--secondary-dark);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .select {
+        border: none;
+        font-family: inherit;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--primary);
+        background: var(--bg-header-footer);
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        outline: none;
+        transition: var(--transition);
+
+        &:hover {
+            background: var(--primary-light);
+            color: white;
+        }
+    }
+}
+
+.section {
+    margin-bottom: 64px;
+
+    .sectionHeader {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 24px;
+        color: var(--secondary-dark);
+
+        h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .icon {
+            color: var(--primary-light);
+        }
+    }
+}
+
+.resourceGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
+}
+
+.resourceCard {
+    background: white;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    padding: 24px;
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    overflow: hidden;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-md);
+        border-color: var(--primary-light);
+    }
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: var(--primary-light);
+        opacity: 0;
+        transition: var(--transition);
+    }
+
+    &:hover::before {
+        opacity: 1;
+    }
+}
+
+.cardTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    .tag {
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        background: var(--bg-header-footer);
+        color: var(--primary);
+        padding: 4px 10px;
+        border-radius: 6px;
+        letter-spacing: 0.5px;
+    }
+}
+
+.cardTitle {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--secondary-dark);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.cardFooter {
+    margin-top: auto;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.actionBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: var(--transition);
+
+    &:hover {
+        background: var(--primary-dark);
+        box-shadow: 0 4px 12px rgba(102, 178, 178, 0.2);
+    }
+}
+
+.ritualCard {
+    background: var(--bg-header-footer);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    border: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+
+    .ritualHeading {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 24px;
+
+        h3 {
+            font-family: var(--font-serif);
+            font-size: 28px;
+            color: var(--secondary-dark);
+            margin: 0;
+        }
+
+        .liveBadge {
+            background: rgba(102, 178, 178, 0.1);
+            color: var(--primary);
+            font-size: 11px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 100px;
+            letter-spacing: 1px;
+            animation: pulse 2s infinite;
+        }
+    }
+
+    .ritualIntro {
+        p {
+            font-size: 17px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 32px;
+            max-width: 500px;
+        }
+
+        .stepPreview {
+            display: flex;
+            gap: 12px;
+
+            .step {
+                background: white;
+                padding: 12px 20px;
+                border: 1px solid var(--border);
+                border-radius: 16px;
+                font-size: 14px;
+                font-weight: 600;
+                color: var(--secondary-dark);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 4px;
+
+                span {
+                    color: var(--primary);
+                    font-size: 12px;
+                    opacity: 0.7;
+                }
+            }
+        }
+    }
+
+    .startRitualBtn {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 20px 40px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 18px;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        box-shadow: 0 15px 30px rgba(102, 178, 178, 0.25);
+
+        &:hover {
+            box-shadow: 0 20px 40px rgba(102, 178, 178, 0.4);
+            transform: translateY(-4px) scale(1.02);
+            background: var(--primary-dark);
+        }
+
+        &.stopBtn {
+            background: #e6e9e0;
+            color: var(--secondary-dark);
+            border: 1px solid var(--border);
+            box-shadow: none;
+
+            &:hover {
+                background: #f8f9f6;
+                color: var(--danger);
+                border-color: var(--danger);
+            }
+        }
+    }
+
+    &.timerActive {
+        background: radial-gradient(circle at center, rgba(142, 151, 117, 0.05) 0%, white 100%);
+        border-color: var(--primary-light);
+    }
+}
+
+.zenConsole {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+}
+
+.bloomContainer {
+    position: relative;
+    width: 240px;
+    height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auraRipple {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--primary-light);
+    opacity: 0;
+    filter: blur(40px);
+    transition: all 4s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &.inhale {
+        opacity: 0.3;
+        transform: scale(1.4);
+    }
+
+    &.hold {
+        opacity: 0.5;
+        transform: scale(1.6);
+        background: var(--primary);
+    }
+
+    &.exhale {
+        opacity: 0.1;
+        transform: scale(1);
+    }
+}
+
+.bloom {
+    width: 320px;
+    height: 320px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 4s cubic-bezier(0.4, 0, 0.2, 1);
+
+    @media (max-width: 480px) {
+        width: 260px;
+        height: 260px;
+    }
+
+    .auraRipple {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: var(--primary-light);
+        opacity: 0;
+        filter: blur(40px);
+        transition: all 4s cubic-bezier(0.4, 0, 0.2, 1);
+
+        &.inhale {
+            opacity: 0.3;
+            transform: scale(1.4);
+        }
+
+        &.hold {
+            opacity: 0.5;
+            transform: scale(1.6);
+            background: var(--primary);
+        }
+
+        &.exhale {
+            opacity: 0.1;
+            transform: scale(1);
+        }
+    }
+
+    .zenBloom {
+        position: relative;
+        width: 100%;
+        height: 100%;
+
+        .track {
+            fill: none;
+            stroke: var(--bg-header-footer);
+            stroke-width: 4;
+        }
+
+        .progress {
+            fill: none;
+            stroke: var(--primary-light);
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-dasharray: 283;
+            stroke-dashoffset: 283;
+            transition: stroke-dashoffset 1s linear, stroke 4s ease;
+        }
+    }
+
+    &.inhale {
+        transform: scale(1.1);
+
+        .progress {
+            stroke: var(--primary-light);
+        }
+    }
+
+    &.hold {
+        transform: scale(1.15);
+
+        .progress {
+            stroke: var(--primary);
+        }
+    }
+
+    &.exhale {
+        transform: scale(0.9);
+
+        .progress {
+            stroke: var(--secondary-dark);
+        }
+    }
+
+    .bloomContent {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 10;
+
+        .phaseLabel {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--secondary-dark);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 4px;
+        }
+
+        .timerSub {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            opacity: 0.8;
+        }
+    }
+}
+
+.completionMessage {
+    text-align: center;
+    padding: 20px;
+
+    .successIcon {
+        color: var(--primary);
+        margin-bottom: 24px;
+        animation: rotateBloom 10s linear infinite;
+    }
+
+    h4 {
+        font-family: var(--font-serif);
+        font-size: 32px;
+        color: var(--secondary-dark);
+        margin-bottom: 12px;
+    }
+
+    p {
+        font-size: 17px;
+        color: var(--text-secondary);
+        margin-bottom: 32px;
+        line-height: 1.6;
+    }
+
+    .resetBtn {
+        background: transparent;
+        border: 2px solid var(--border);
+        padding: 12px 28px;
+        border-radius: 100px;
+        font-weight: 700;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: var(--transition);
+
+        &:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--bg-primary);
+        }
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 0.6;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes rotateBloom {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.audioGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 24px;
+}
+
+.audioCard {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: var(--transition);
+
+    &:hover {
+        border-color: var(--primary-light);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .audioIcon {
+        width: 50px;
+        height: 50px;
+        background: var(--bg-header-footer);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary);
+    }
+
+    .audioContent {
+        flex: 1;
+
+        h4 {
+            margin: 0 0 8px;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--secondary-dark);
+        }
+
+        audio {
+            width: 100%;
+            height: 32px;
+        }
+    }
+}
+
+.modalBackdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal {
+    background: white;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.modalHeader {
+    padding: 20px 32px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h3 {
+        margin: 0;
+        font-family: var(--font-serif);
+        font-size: 22px;
+        color: var(--secondary-dark);
+    }
+
+    .closeBtn {
+        background: var(--bg-header-footer);
+        border: none;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: var(--text-secondary);
+        transition: var(--transition);
+
+        &:hover {
+            background: var(--panel-2);
+            color: var(--danger);
+        }
+    }
+}
+
+.videoWrapper {
+    position: relative;
+    padding-top: 56.25%;
+    background: #000;
+
+    iframe,
+    video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+}
+
+@keyframes modalPop {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+
+    .resourceGrid,
+    .audioGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .ritualCard {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+}
