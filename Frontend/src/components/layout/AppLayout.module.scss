@@ -502,19 +502,24 @@
 
 @media (max-width: 1100px) {
   .headerContent {
-    height: 80px;
+    height: 70px;
+    padding: 0 16px;
   }
 
   .logo {
-    height: 50px;
+    height: 40px;
+  }
+
+  .brand {
+    gap: 8px;
   }
 
   .brandName {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .tagline {
-    font-size: 8px;
+    display: none; // Hide tagline on mobile to save space
   }
 
   .navLinks {
@@ -523,13 +528,57 @@
 }
 
 @media (max-width: 600px) {
+  .headerContent {
+    height: 60px;
+    padding: 0 12px;
+  }
+
+  .headerLeft,
   .headerRight {
-    .dropdown-toggle span {
+    gap: 8px;
+  }
+
+  .logo {
+    height: 32px;
+  }
+
+  .brandName {
+    font-size: 16px;
+  }
+
+  .backButton {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .user-menu .dropdown-toggle {
+    span {
       display: none;
+    }
+
+    padding: 4px;
+  }
+
+  .user-menu .user-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+
+  .mobileMenuToggle {
+    padding: 4px;
+
+    svg {
+      width: 20px;
+      height: 20px;
     }
   }
 
   .main {
-    padding: 20px 16px;
+    padding: 16px 12px;
   }
 }
