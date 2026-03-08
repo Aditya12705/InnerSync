@@ -1,4 +1,4 @@
-# MindFulness - Digital Mental Health Platform
+# InnerSync - Digital Mental Health Platform
 
 A comprehensive digital mental health and psychological support system for university students.
 
@@ -127,4 +127,4 @@ GROQ_API_KEY=your_groq_api_key
 
 ---
 
-**MindFulness**: An Application for Development of a Digital Mental Health and Psychological Support System for Students in Higher Education
+**InnerSync**: An Application for Development of a Digital Mental Health and Psychological Support System for Students in Higher Education
