@@ -1,5 +1,5 @@
 // API Base URL - points to the proxy server
-export const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
+export const API_BASE = '';
 
 // Other configuration constants can be added here
 export const APP_NAME = 'InnerSync';
