@@ -1,0 +1,33 @@
+{
+    "$schema": "https://railway.app/railway.schema.json",
+    "services": {
+        "backend": {
+            "name": "innersync-backend",
+            "source": {
+                "root": "Backend"
+            },
+            "build": {
+                "builder": "NIXPACKS"
+            },
+            "deploy": {
+                "numReplicas": 1,
+                "sleep": false,
+                "restartPolicy": "ON_FAILURE"
+            }
+        },
+        "frontend": {
+            "name": "innersync-frontend",
+            "source": {
+                "root": "Frontend"
+            },
+            "build": {
+                "builder": "NIXPACKS"
+            },
+            "deploy": {
+                "numReplicas": 1,
+                "sleep": false,
+                "restartPolicy": "ON_FAILURE"
+            }
+        }
+    }
+}
