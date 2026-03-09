@@ -9,12 +9,35 @@ import { protectRoute } from '../middleware/protectRoute.js'
 
 const router = Router()
 
+// Get all users (Admin/Counselor only)
+router.get('/users', protectRoute, async (req, res) => {
+  try {
+    const users = await User.find().select('-password').sort({ createdAt: -1 });
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching users', error: error.message });
+  }
+});
+
+// Get all assessment submissions
+router.get('/assessments/submissions', protectRoute, async (req, res) => {
+  try {
+    const assessments = await Assessment.find()
+      .populate('studentId', 'name email')
+      .sort({ completedAt: -1 });
+    res.json(assessments);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching assessments', error: error.message });
+  }
+});
+
 // Get dashboard overview statistics
 router.get('/overview', protectRoute, async (req, res) => {
   try {
     const [
       totalUsers,
       activeUsers,
+      totalCounselors,
       totalAppointments,
       pendingAppointments,
       totalChatSessions,
@@ -24,6 +47,7 @@ router.get('/overview', protectRoute, async (req, res) => {
     ] = await Promise.all([
       User.countDocuments(),
       User.countDocuments({ role: 'student' }),
+      User.countDocuments({ role: 'counselor' }),
       Appointment.countDocuments(),
       Appointment.countDocuments({ status: 'booked' }),
       ChatSession.countDocuments(),
@@ -37,6 +61,7 @@ router.get('/overview', protectRoute, async (req, res) => {
     res.json({
       totalUsers,
       activeUsers,
+      totalCounselors,
       totalAppointments,
       pendingAppointments,
       totalChatSessions,
@@ -54,7 +79,7 @@ router.get('/users/trends', protectRoute, async (req, res) => {
   try {
     const { period = '7d' } = req.query
     const days = period === '7d' ? 7 : period === '30d' ? 30 : 90
-    
+
     const trends = await User.aggregate([
       {
         $match: {
@@ -261,7 +286,7 @@ router.get('/system/health', protectRoute, async (req, res) => {
 router.get('/activity/feed', protectRoute, async (req, res) => {
   try {
     const { limit = 20 } = req.query
-    
+
     const activities = await SystemLog.find()
       .sort({ timestamp: -1 })
       .limit(parseInt(limit))

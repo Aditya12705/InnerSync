@@ -15,41 +15,55 @@ import {
 import { useAuth } from '../../context/AuthContext.jsx';
 import { AdminCharts } from './AdminCharts.jsx';
 import { AnimatedBackground } from '../../components/layout/AnimatedBackground.jsx';
-import { AppointmentsAPI } from '../../services/api.js';
+import { AppointmentsAPI, AnalyticsAPI } from '../../services/api.js';
 import styles from './AdminDashboard.module.scss';
 
 export function AdminDashboard() {
   const { logoutAdmin, user } = useAuth();
   const navigate = useNavigate();
   const [upcomingAppointments, setUpcomingAppointments] = useState([]);
+  const [stats, setStats] = useState({
+    activeUsers: 0,
+    totalCounselors: 0,
+    totalAssessments: 0,
+    pendingCases: 0
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    const fetchAppointments = async () => {
-      if (!user || !user.id) {
-        setError('Authentication error. Please log in again.');
-        setLoading(false);
-        return;
-      }
+  const isCounselor = user?.role === 'counselor';
+  const isAdmin = user?.role === 'admin';
 
+  useEffect(() => {
+    const fetchDashboardData = async () => {
       try {
         setLoading(true);
         setError('');
-        const counselorId = user.id;
-        const appointments = await AppointmentsAPI.getCounselorAppointments(counselorId);
-        setUpcomingAppointments(Array.isArray(appointments) ? appointments : []);
+
+        // Fetch Overview Stats
+        const overview = await AnalyticsAPI.getOverview();
+        setStats({
+          activeUsers: overview.activeUsers || 0,
+          totalCounselors: overview.totalCounselors || 0,
+          totalAssessments: overview.totalAssessments || 0,
+          pendingCases: overview.pendingAppointments || 0
+        });
+
+        // Fetch Appointments only if Counselor
+        if (isCounselor && user?.id) {
+          const appointments = await AppointmentsAPI.getCounselorAppointments(user.id);
+          setUpcomingAppointments(Array.isArray(appointments) ? appointments : []);
+        }
       } catch (err) {
-        console.error('Error fetching appointments:', err);
-        setError('Failed to load appointments. Please try again later.');
-        setUpcomingAppointments([]);
+        console.error('Error fetching dashboard data:', err);
+        setError('Failed to load dashboard data. Please try again later.');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchAppointments();
-  }, [user]);
+    fetchDashboardData();
+  }, [user, isCounselor]);
 
   const formatDate = (dateString) => {
     const options = { weekday: 'short', month: 'short', day: 'numeric' };
@@ -60,13 +74,6 @@ export function AdminDashboard() {
     const options = { hour: '2-digit', minute: '2-digit', hour12: true };
     return new Date(dateString).toLocaleTimeString('en-US', options);
   }
-
-  const stats = {
-    activeUsers: 128,
-    pendingCases: upcomingAppointments?.length || 0,
-    onlineCounselors: 2,
-    activeChats: 0,
-  };
 
   const recentActivity = [
     ...upcomingAppointments.slice(0, 3).map(appt => ({
@@ -81,17 +88,17 @@ export function AdminDashboard() {
       <header className={styles.header}>
         <div className={styles.headerLeft}>
           <img src="/images/logo.png" alt="InnerSync Logo" className={styles.logo} />
-          <h1>InnerSync Counselor Portal</h1>
+          <h1>InnerSync {isAdmin ? 'Admin' : 'Counselor'} Portal</h1>
         </div>
         <div className={styles.headerRight}>
           <div className={styles.adminStatus}>
             <span className={styles.statusDot}></span>
-            <span>Welcome, {user?.name || 'Counselor'}</span>
+            <span>Welcome, {user?.name || (isAdmin ? 'Admin' : 'Counselor')}</span>
           </div>
           <button
             onClick={() => {
               logoutAdmin();
-              navigate('/counselor/login');
+              navigate(isAdmin ? '/admin/login' : '/counselor/login');
             }}
             className={styles.logoutBtn}
           >
@@ -106,28 +113,28 @@ export function AdminDashboard() {
           <div className={styles.statIcon}><Users /></div>
           <div className={styles.statContent}>
             <div className={styles.statValue}>{stats.activeUsers}</div>
-            <div className={styles.statLabel}>Active Users</div>
-          </div>
-        </div>
-        <div className={styles.statCard}>
-          <div className={styles.statIcon}><ClipboardList /></div>
-          <div className={styles.statContent}>
-            <div className={styles.statValue}>{stats.pendingCases}</div>
-            <div className={styles.statLabel}>Upcoming Sessions</div>
+            <div className={styles.statLabel}>Students</div>
           </div>
         </div>
         <div className={styles.statCard}>
           <div className={styles.statIcon}><Stethoscope /></div>
           <div className={styles.statContent}>
-            <div className={styles.statValue}>{stats.onlineCounselors}</div>
-            <div className={styles.statLabel}>Online Counselors</div>
+            <div className={styles.statValue}>{stats.totalCounselors}</div>
+            <div className={styles.statLabel}>Counselors</div>
+          </div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.statIcon}><ClipboardList /></div>
+          <div className={styles.statContent}>
+            <div className={styles.statValue}>{stats.totalAssessments}</div>
+            <div className={styles.statLabel}>Assessments Filled</div>
           </div>
         </div>
         <div className={styles.statCard}>
           <div className={styles.statIcon}><MessageCircle /></div>
           <div className={styles.statContent}>
-            <div className={styles.statValue}>{stats.activeChats}</div>
-            <div className={styles.statLabel}>Active Chats</div>
+            <div className={styles.statValue}>{stats.pendingCases}</div>
+            <div className={styles.statLabel}>Booked Appts</div>
           </div>
         </div>
       </section>
@@ -165,37 +172,39 @@ export function AdminDashboard() {
         </div>
 
         <aside className={styles.sidebar}>
-          <section className="card" style={{ marginBottom: '20px' }}>
-            <div className={styles.cardHeader}>
-              <h3>Upcoming Appointments</h3>
-              <div className={styles.cardIcon}><Calendar size={20} /></div>
-            </div>
-            {loading ? (
-              <p>Loading appointments...</p>
-            ) : error ? (
-              <p style={{ color: 'var(--danger)' }}>{error}</p>
-            ) : upcomingAppointments.length === 0 ? (
-              <p>No upcoming appointments</p>
-            ) : (
-              <div className={styles.appointmentList}>
-                {upcomingAppointments.map((appointment) => (
-                  <div key={appointment._id} className={styles.appointmentItem}>
-                    <div className={styles.appointmentTime}>
-                      {formatTime(appointment.startsAt)}
-                    </div>
-                    <div className={styles.appointmentDetails}>
-                      <div className={styles.appointmentTitle}>
-                        {appointment.student?.name || 'Student'}
-                      </div>
-                      <div className={styles.appointmentDate}>
-                        {formatDate(appointment.startsAt)}
-                      </div>
-                    </div>
-                  </div>
-                ))}
+          {isCounselor && (
+            <section className="card" style={{ marginBottom: '20px' }}>
+              <div className={styles.cardHeader}>
+                <h3>Upcoming Appointments</h3>
+                <div className={styles.cardIcon}><Calendar size={20} /></div>
               </div>
-            )}
-          </section>
+              {loading ? (
+                <p>Loading appointments...</p>
+              ) : error ? (
+                <p style={{ color: 'var(--danger)' }}>{error}</p>
+              ) : upcomingAppointments.length === 0 ? (
+                <p>No upcoming appointments</p>
+              ) : (
+                <div className={styles.appointmentList}>
+                  {upcomingAppointments.map((appointment) => (
+                    <div key={appointment._id} className={styles.appointmentItem}>
+                      <div className={styles.appointmentTime}>
+                        {formatTime(appointment.startsAt)}
+                      </div>
+                      <div className={styles.appointmentDetails}>
+                        <div className={styles.appointmentTitle}>
+                          {appointment.student?.name || 'Student'}
+                        </div>
+                        <div className={styles.appointmentDate}>
+                          {formatDate(appointment.startsAt)}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+          )}
 
           <section className="card">
             <div className={styles.cardHeader}>
@@ -209,7 +218,11 @@ export function AdminDashboard() {
               </button>
               <button className={styles.actionBtn} onClick={() => navigate('/counselor/cases')}>
                 <div className={styles.actionIcon}><ClipboardList size={18} /></div>
-                <span>View Cases</span>
+                <span>Active Appts</span>
+              </button>
+              <button className={styles.actionBtn} onClick={() => navigate('/admin/assessment-results')}>
+                <div className={styles.actionIcon}><ClipboardList size={18} /></div>
+                <span>View Forms/Tests</span>
               </button>
               <button className={styles.actionBtn} onClick={() => navigate('/counselor/reports')}>
                 <div className={styles.actionIcon}><BarChart3 size={18} /></div>

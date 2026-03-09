@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import {
   Zap,
@@ -10,9 +10,11 @@ import {
   Book,
   Wind,
   BookOpen,
-  LayoutDashboard
+  LayoutDashboard,
+  ArrowLeft
 } from 'lucide-react';
 import { StudentAPI } from '../../services/api.js';
+import { MoodIndicator } from '../../components/mood/MoodIndicator.jsx';
 import styles from './StudentDashboard.module.scss';
 
 // Helper to format date distance
@@ -34,6 +36,7 @@ const formatDistanceToNow = (date) => {
 };
 
 export function StudentDashboard() {
+  const navigate = useNavigate();
   const { user } = useAuth();
   // ... state and effects (remained same)
   const [summary, setSummary] = useState(null);
@@ -82,9 +85,22 @@ export function StudentDashboard() {
     <div className={styles.dashboard}>
       <div className={styles.hero}>
         <div className={styles.heroContent}>
-          <div className={styles.welcomeWrapper}>
-            <LayoutDashboard className={styles.welcomeIcon} />
-            <h1 className={styles.welcome}>Welcome back, {user?.name || summary?.studentName || 'Student'}!</h1>
+          <div className={styles.welcomeWrapper} style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <button
+              onClick={() => navigate(-1)}
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                width: '40px', height: '40px', borderRadius: '50%',
+                backgroundColor: 'rgba(255, 255, 255, 0.2)', border: '1px solid rgba(255, 255, 255, 0.4)',
+                cursor: 'pointer', color: 'white', flexShrink: 0
+              }}
+            >
+              <ArrowLeft size={20} />
+            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <LayoutDashboard className={styles.welcomeIcon} />
+              <h1 className={styles.welcome} style={{ margin: 0 }}>Welcome back, {user?.name || summary?.studentName || 'Student'}!</h1>
+            </div>
           </div>
           <p className={styles.subtitle}>Your space for mental clarity and support.</p>
           {loading ? (
@@ -164,6 +180,11 @@ export function StudentDashboard() {
             </div>
           </section>
         )}
+
+        <div className={styles.mobileMirror}>
+          <span className={styles.mirrorLabel}>Reframing Mirror</span>
+          <MoodIndicator showHistory={false} />
+        </div>
 
         <section className={styles.card}>
           <div className={styles.cardHeader}>

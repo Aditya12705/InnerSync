@@ -28,7 +28,7 @@ export async function apiPost(path, body, opts = {}) {
     const logBody = body ? { ...body } : {};
     if (logBody.password) logBody.password = '***';
     if (logBody.token) logBody.token = '***';
-    
+
     const headers = {
       'Content-Type': 'application/json',
       ...authHeaders(),
@@ -127,6 +127,8 @@ export const AnalyticsAPI = {
   getAppointmentAnalytics: () => apiGet('/api/analytics/appointments/analytics'),
   getSystemHealth: () => apiGet('/api/analytics/system/health'),
   getActivityFeed: (limit) => apiGet(`/api/analytics/activity/feed?limit=${limit}`),
+  getUsers: () => apiGet('/api/analytics/users'),
+  getAssessmentSubmissions: () => apiGet('/api/analytics/assessments/submissions'),
 };
 
 export const StudentAPI = {

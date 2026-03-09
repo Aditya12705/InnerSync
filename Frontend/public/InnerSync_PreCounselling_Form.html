@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InnerSync – Guided Intake Journey</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4a5d3f;
+      /* Moss Green from website */
+      --primary-light: #6a7e5d;
+      --primary-dark: #32412b;
+      --bg-cream: #f5f5f0;
+      /* Warm Cream background */
+      --card-bg: #ffffff;
+      --input-bg: #f9f7f2;
+      /* Light Tan for inputs */
+      --text-dark: #2c2c28;
+      --text-muted: #6e6e66;
+      --accent-amber: #d4833a;
+      --accent-red: #a33b33;
+      --border: rgba(74, 93, 63, 0.1);
+      --shadow: 0 8px 30px rgba(74, 93, 63, 0.05);
+      /* Softer, organic shadow */
+      --radius: 24px;
+      --radius-sm: 16px;
+      --transition: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--bg-cream);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    .page-container {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 60px 24px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Progress System - Minimalist approach */
+    .journey-header {
+      margin-bottom: 48px;
+    }
+
+    .progress-container {
+      background: var(--card-bg);
+      padding: 24px 32px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .brand-mini {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 20px;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .privacy-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--primary);
+      background: #f0f2ed;
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .step-indicator {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .progress-track {
+      height: 6px;
+      background: #e9e9e2;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.6s var(--transition);
+      border-radius: 10px;
+    }
+
+    /* Step Management */
+    .form-step {
+      display: none;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s var(--transition);
+    }
+
+    .form-step.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .form-step.exit {
+      display: block;
+      opacity: 0;
+      transform: translateY(-20px);
+      pointer-events: none;
+      position: absolute;
+      width: 100%;
+      max-width: 752px;
+    }
+
+    .intro-card {
+      background: var(--card-bg);
+      padding: 80px 48px;
+      border-radius: var(--radius);
+      text-align: center;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .intro-card h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 48px;
+      margin-bottom: 24px;
+      color: var(--primary-dark);
+      line-height: 1.1;
+    }
+
+    .intro-card p {
+      color: var(--text-muted);
+      font-size: 19px;
+      line-height: 1.6;
+      margin-bottom: 40px;
+      max-width: 580px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Question Styling */
+    .question-set {
+      background: var(--card-bg);
+      padding: 56px 48px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .section-tag {
+      display: inline-block;
+      padding: 8px 18px;
+      background: var(--bg-cream);
+      color: var(--primary);
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 32px;
+    }
+
+    .question-item {
+      margin-bottom: 48px;
+    }
+
+    .question-label {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 14px;
+      display: block;
+      line-height: 1.3;
+      color: var(--text-dark);
+    }
+
+    .question-hint {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      font-style: italic;
+    }
+
+    .required-dot {
+      color: var(--accent-red);
+      margin-left: 4px;
+    }
+
+    /* Input Refinement - Matching Website */
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .option-card {
+      padding: 20px 24px;
+      border: 1.5px solid #e9e9e2;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-weight: 500;
+      font-size: 16px;
+      background: var(--input-bg);
+    }
+
+    .option-card:hover {
+      border-color: var(--primary-light);
+      transform: translateY(-2px);
+    }
+
+    .option-card input {
+      accent-color: var(--primary);
+      width: 20px;
+      height: 20px;
+    }
+
+    .option-card.selected {
+      border-color: var(--primary);
+      background-color: #f0f2ed;
+      color: var(--primary-dark);
+      font-weight: 600;
+    }
+
+    .text-input {
+      width: 100%;
+      padding: 18px 24px;
+      border: 1.5px solid #e9e9e2;
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 16px;
+      outline: none;
+      transition: all 0.2s var(--transition);
+      background: var(--input-bg);
+      color: var(--text-dark);
+    }
+
+    .text-input:focus {
+      border-color: var(--primary);
+      background: white;
+      box-shadow: 0 0 0 4px rgba(74, 93, 63, 0.05);
+    }
+
+    textarea.text-input {
+      min-height: 140px;
+      resize: none;
+    }
+
+    /* Buttons - Pill Shape */
+    .navigation-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 40px;
+      padding: 0 10px;
+    }
+
+    .btn {
+      padding: 18px 44px;
+      border-radius: 999px;
+      /* Pill shape from website */
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 17px;
+      cursor: pointer;
+      transition: all 0.3s var(--transition);
+      border: none;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(74, 93, 63, 0.2);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+
+    .btn-outline:hover {
+      background: #f0f2ed;
+      transform: translateY(-2px);
+    }
+
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* Tags Selection */
+    .tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .tag-item {
+      padding: 12px 24px;
+      background: var(--input-bg);
+      border: 1.5px solid #e9e9e2;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 500;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .tag-item input {
+      display: none;
+    }
+
+    .tag-item:hover {
+      border-color: var(--primary-light);
+    }
+
+    .tag-item.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    /* Safety & Success Styling */
+    .safety-box {
+      background: #fdf5f5;
+      border: 1px solid #f2e1e1;
+      padding: 28px;
+      border-radius: var(--radius-sm);
+      margin-top: 32px;
+    }
+
+    .safety-box p {
+      color: #7a3a35;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .success-screen {
+      text-align: center;
+      padding: 100px 48px;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .success-icon {
+      font-size: 80px;
+      margin-bottom: 32px;
+      display: inline-block;
+    }
+
+    .error-text {
+      color: var(--accent-red);
+      font-size: 14px;
+      margin-top: 10px;
+      font-weight: 600;
+      display: none;
+    }
+
+    .has-error .error-text {
+      display: block;
+    }
+
+    .has-error .option-card,
+    .has-error .text-input {
+      border-color: var(--accent-red);
+    }
+
+    @media (max-width: 600px) {
+      .page-container {
+        padding: 40px 16px;
+      }
+
+      .intro-card {
+        padding: 60px 24px;
+      }
+
+      .intro-card h1 {
+        font-size: 36px;
+      }
+
+      .question-set {
+        padding: 40px 24px;
+      }
+
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .btn {
+        padding: 16px 32px;
+        font-size: 16px;
+        width: 100%;
+        justify-content: center;
+      }
+
+      .navigation-bar {
+        flex-direction: column-reverse;
+        gap: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page-container">
+
+    <div class="journey-header">
+      <div class="progress-container">
+        <div class="progress-meta">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="brand-mini">InnerSync</div>
+            <div class="privacy-badge">🔒 Private & Secure</div>
+          </div>
+          <div class="step-indicator" id="stepCounter">0 of 7 Steps</div>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressBar"></div>
+        </div>
+      </div>
+    </div>
+
+    <form id="journeyForm" novalidate onsubmit="return false;">
+
+      <!-- STEP 0: Welcome -->
+      <div class="form-step active" data-step="0">
+        <div class="intro-card">
+          <div class="success-icon">
+            <img
+              src="file:///C:/Users/HP/.gemini/antigravity/brain/7db039ce-699c-4045-a85f-0ab707a5e936/media__1773030544104.jpg"
+              alt="InnerSync Official Logo"
+              style="width: 180px; height: auto; border-radius: 12px; margin-bottom: 8px;">
+          </div>
+          <h1>Welcome to <em>InnerSync</em></h1>
+          <p>This guided journey is a safe space to share. It takes about <strong>5-8 minutes</strong> and helps us
+            connect you with the right path forward.</p>
+
+          <div
+            style="background: var(--input-bg); padding: 20px; border-radius: var(--radius-sm); margin: 0 auto 32px; max-width: 500px; text-align: left; border: 1px dashed var(--border);">
+            <div style="display: flex; gap: 12px; align-items: flex-start;">
+              <span style="font-size: 20px;">🔒</span>
+              <p style="font-size: 14px; margin-bottom: 0; color: var(--text-dark); line-height: 1.5;">
+                <strong>Your privacy is protected.</strong> Everything you share is strictly confidential and secured.
+                Your data will never be shared without your consent — the only exception is an immediate safety concern
+                requiring urgent intervention.
+              </p>
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-primary" style="margin: 0 auto;" onclick="nextStep()">Begin the Journey
+            →</button>
+        </div>
+      </div>
+
+      <!-- STEP 1: Basic Info -->
+      <div class="form-step" data-step="1">
+        <div class="question-set">
+          <span class="section-tag">Step 1: Introduction</span>
+
+          <div class="question-item" data-required="false">
+            <label class="question-label">What should we call you?</label>
+            <p class="question-hint">Optional — you may remain anonymous or use a nickname</p>
+            <input type="text" name="q1" class="text-input" placeholder="Your name...">
+          </div>
+
+          <div class="question-item" data-required="true" data-type="radio">
+            <label class="question-label">How old are you?<span class="required-dot">*</span></label>
+            <div class="options-grid">
+              <label class="option-card"><input type="radio" name="q2" value="Under 18"> Under 18</label>
+              <label class="option-card"><input type="radio" name="q2" value="18–21"> 18–21</label>
+              <label class="option-card"><input type="radio" name="q2" value="22–25"> 22–25</label>
+              <label class="option-card"><input type="radio" name="q2" value="26–35"> 26–35</label>
+              <label class="option-card"><input type="radio" name="q2" value="36–45"> 36–45</label>
+              <label class="option-card"><input type="radio" name="q2" value="46+"> 46+</label>
+            </div>
+            <div class="error-text">Please select your age group.</div>
+          </div>
+
+          <div class="question-item" data-required="true" data-type="radio">
+            <label class="question-label">Current Status?<span class="required-dot">*</span></label>
+            <div class="options-grid">
+              <label class="option-card"><input type="radio" name="q4" value="Student"> Student</label>
+              <label class="option-card"><input type="radio" name="q4" value="Professional"> Professional</label>
+              <label class="option-card"><input type="radio" name="q4" value="Self-employed"> Self-employed</label>
+              <label class="option-card"><input type="radio" name="q4" value="Unemployed"> Unemployed</label>
+            </div>
+            <div class="error-text">Please select one.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2: The Why -->
+      <div class="form-step" data-step="2">
+        <div class="question-set">
+          <span class="section-tag">Step 2: Mental Space</span>
+
+          <div class="question-item" data-required="true" data-type="text">
+            <label class="question-label">What's been on your mind lately?<span class="required-dot">*</span></label>
+            <p class="question-hint">Share what brought you to seek support today. There are no wrong answers.</p>
+            <textarea name="q5" class="text-input" placeholder="Describe in your own words..."></textarea>
+            <div class="error-text">Please share a little with us.</div>
+          </div>
+
+          <div class="question-item" data-required="true" data-type="radio">
+            <label class="question-label">How long has this been occurring?<span class="required-dot">*</span></label>
+            <div class="options-grid">
+              <label class="option-card"><input type="radio" name="q6" value="Less than 1 month"> &lt; 1 month</label>
+              <label class="option-card"><input type="radio" name="q6" value="1–3 months"> 1–3 months</label>
+              <label class="option-card"><input type="radio" name="q6" value="3–6 months"> 3–6 months</label>
+              <label class="option-card"><input type="radio" name="q6" value="6+ months"> 6+ months</label>
+            </div>
+            <div class="error-text">Please select a duration.</div>
+          </div>
+
+          <div class="question-item" data-required="true" data-type="radio">
+            <label class="question-label">How deeply is this impacting you?<span class="required-dot">*</span></label>
+            <div class="options-grid">
+              <label class="option-card"><input type="radio" name="q7" value="Minimally"> Minimally</label>
+              <label class="option-card"><input type="radio" name="q7" value="Somewhat"> Somewhat</label>
+              <label class="option-card"><input type="radio" name="q7" value="Moderately"> Moderately</label>
+              <label class="option-card"><input type="radio" name="q7" value="Severely"> Severely</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3: Emotional Wellbeing -->
+      <div class="form-step" data-step="3">
+        <div class="question-set">
+          <span class="section-tag">Step 3: Wellbeing Check</span>
+
+          <div class="question-item" data-required="true" data-type="radio">
+            <label class="question-label">Frequency of anxiety or restlessness?<span
+                class="required-dot">*</span></label>
+            <div class="options-grid">
+              <label class="option-card"><input type="radio" name="q9" value="Not at all"> Not at all</label>
+              <label class="option-card"><input type="radio" name="q9" value="Several days"> Several days</label>
+              <label class="option-card"><input type="radio" name="q9" value="Often"> Most days</label>
+              <label class="option-card"><input type="radio" name="q9" value="Daily"> Every day</label>
+            </div>
+          </div>
+
+          <div class="question-item" data-required="true" data-type="radio">
+            <label class="question-label">Frequency of low mood or hopelessness?<span
+                class="required-dot">*</span></label>
+            <div class="options-grid">
+              <label class="option-card"><input type="radio" name="q10" value="Not at all"> Not at all</label>
+              <label class="option-card"><input type="radio" name="q10" value="Several days"> Several days</label>
+              <label class="option-card"><input type="radio" name="q10" value="Often"> Most days</label>
+              <label class="option-card"><input type="radio" name="q10" value="Daily"> Every day</label>
+            </div>
+          </div>
+
+          <div class="question-item" data-required="true" data-type="radio">
+            <label class="question-label">Have you lost interest in regular activities?<span
+                class="required-dot">*</span></label>
+            <div class="options-grid">
+              <label class="option-card"><input type="radio" name="q11" value="No"> No</label>
+              <label class="option-card"><input type="radio" name="q11" value="A little"> A little</label>
+              <label class="option-card"><input type="radio" name="q11" value="Noticeably"> Noticeably</label>
+              <label class="option-card"><input type="radio" name="q11" value="Significantly"> Significantly</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4: Lifestyle -->
+      <div class="form-step" data-step="4">
+        <div class="question-set">
+          <span class="section-tag">Step 4: Daily Habits</span>
+
+          <div class="question-item" data-required="true" data-type="radio">
+            <label class="question-label">Average night's sleep?<span class="required-dot">*</span></label>
+            <div class="options-grid">
+              <label class="option-card"><input type="radio" name="q13" value="< 4 hrs"> &lt; 4 hours</label>
+              <label class="option-card"><input type="radio" name="q13" value="4-6 hrs"> 4–6 hours</label>
+              <label class="option-card"><input type="radio" name="q13" value="6-8 hrs"> 6–8 hours</label>
+              <label class="option-card"><input type="radio" name="q13" value="8+ hrs"> 8+ hours</label>
+            </div>
+          </div>
+
+          <div class="question-item" data-required="true" data-type="radio">
+            <label class="question-label">Do you move or exercise regularly?<span class="required-dot">*</span></label>
+            <div class="options-grid">
+              <label class="option-card"><input type="radio" name="q15" value="Daily"> Daily</label>
+              <label class="option-card"><input type="radio" name="q15" value="Few times a week"> 2-3x / week</label>
+              <label class="option-card"><input type="radio" name="q15" value="Rarely"> Rarely</label>
+              <label class="option-card"><input type="radio" name="q15" value="Never"> Never</label>
+            </div>
+          </div>
+
+          <div class="question-item" data-required="false">
+            <label class="question-label">Substance use (Alcohol, Tobacco, etc.)</label>
+            <p class="question-hint">No judgment. This helps us see the full picture.</p>
+            <div class="options-grid">
+              <label class="option-card"><input type="radio" name="q16" value="No"> Never</label>
+              <label class="option-card"><input type="radio" name="q16" value="Occasionally"> Occasionally</label>
+              <label class="option-card"><input type="radio" name="q16" value="Regularly"> Regularly</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 5: Social & Medical -->
+      <div class="form-step" data-step="5">
+        <div class="question-set">
+          <span class="section-tag">Step 5: Connections</span>
+
+          <div class="question-item" data-required="true" data-type="radio">
+            <label class="question-label">Describe your support system.<span class="required-dot">*</span></label>
+            <div class="options-grid">
+              <label class="option-card"><input type="radio" name="q17" value="Strong"> Very Supportive</label>
+              <label class="option-card"><input type="radio" name="q17" value="Moderate"> Somewhat</label>
+              <label class="option-card"><input type="radio" name="q17" value="None"> No support system</label>
+            </div>
+          </div>
+
+          <div class="question-item" data-required="false">
+            <label class="question-label">Medical history or conditions?</label>
+            <div class="options-grid">
+              <label class="option-card" data-trigger="q19d" data-show="true"><input type="radio" name="q19"
+                  value="Yes"> Yes</label>
+              <label class="option-card" data-trigger="q19d" data-show="false"><input type="radio" name="q19"
+                  value="No"> No</label>
+              <label class="option-card" data-trigger="q19d" data-show="false"><input type="radio" name="q19"
+                  value="Not sure"> Not sure</label>
+            </div>
+            <div id="q19d" style="display:none; margin-top:16px;">
+              <input type="text" name="q19detail" class="text-input" placeholder="Please briefly specify...">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 6: Safety -->
+      <div class="form-step" data-step="6">
+        <div class="question-set">
+          <span class="section-tag">Step 6: Wellbeing Check</span>
+
+          <div class="question-item" data-required="false">
+            <label class="question-label">Thoughts of self-harm or hopelessness?</label>
+            <p class="question-hint">Your answers help us keep you safe. We are here to support you.</p>
+            <div class="options-grid">
+              <label class="option-card"><input type="radio" name="q21" value="No"> No</label>
+              <label class="option-card"><input type="radio" name="q21" value="Briefly"> Brief thoughts</label>
+              <label class="option-card"><input type="radio" name="q21" value="Sometimes"> Sometimes</label>
+              <label class="option-card"><input type="radio" name="q21" value="Often"> Frequently</label>
+            </div>
+            <div class="safety-box">
+              <p>🌿 <strong>A Note from InnerSync:</strong> If you are in immediate distress, please reach out to:
+                <strong>iCall (9152987821)</strong> or emergency services <strong>(112)</strong>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 7: Support Choices -->
+      <div class="form-step" data-step="7">
+        <div class="question-set">
+          <span class="section-tag">Step 7: Final Step</span>
+
+          <div class="question-item" data-required="true" data-type="checkbox">
+            <label class="question-label">What kind of support are you seeking?<span
+                class="required-dot">*</span></label>
+            <div class="tags-container">
+              <label class="tag-item"><input type="checkbox" name="q23" value="Anonymous"> 🗨 Anonymous Support</label>
+              <label class="tag-item"><input type="checkbox" name="q23" value="AI tools"> 🤖 AI Wellness</label>
+              <label class="tag-item"><input type="checkbox" name="q23" value="Counselling"> 🧑‍⚕️ Counselling</label>
+              <label class="tag-item"><input type="checkbox" name="q23" value="Peer group"> 🤝 Peer Groups</label>
+              <label class="tag-item"><input type="checkbox" name="q23" value="Self-help"> 📚 Resources</label>
+            </div>
+            <div class="error-text">Please select at least one path.</div>
+          </div>
+
+          <div class="question-item">
+            <label class="question-label">Any specific preferences for your guide?</label>
+            <textarea name="q24" class="text-input" placeholder="Gender, language, specific expertise..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="navigation-bar" id="navBar" style="display: none;">
+        <button type="button" class="btn btn-outline" id="backBtn" onclick="prevStep()">← Previous</button>
+        <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextStep()">Continue Journey →</button>
+      </div>
+
+    </form>
+
+    <div class="success-screen" id="successScreen" style="display: none;">
+      <div class="success-icon">
+        <img
+          src="file:///C:/Users/HP/.gemini/antigravity/brain/7db039ce-699c-4045-a85f-0ab707a5e936/media__1773030544104.jpg"
+          alt="InnerSync Success Logo" style="width: 160px; height: auto; border-radius: 12px; margin-bottom: 12px;">
+      </div>
+      <h1 style="font-family: 'Playfair Display'; color: var(--primary-dark); margin-bottom: 24px;">Journey Initiated
+      </h1>
+      <p style="color: var(--text-muted); font-size: 19px; margin-bottom: 40px; line-height: 1.6;">Thank you for
+        trusting InnerSync. We have received your thoughts and will be in touch within 24 hours.</p>
+      <div style="font-weight: 600; color: var(--primary); font-size: 18px;">Take a moment for yourself today.</div>
+    </div>
+
+  </div>
+
+  <script>
+    let currentStep = 0;
+    const TOTAL_STEPS = 7;
+    const form = document.getElementById('journeyForm');
+    const progressBar = document.getElementById('progressBar');
+    const stepCounter = document.getElementById('stepCounter');
+    const navBar = document.getElementById('navBar');
+    const successScreen = document.getElementById('successScreen');
+
+    // Handle Option Cards
+    document.querySelectorAll('.option-card').forEach(card => {
+      card.addEventListener('click', function () {
+        const input = this.querySelector('input');
+        const name = input.name;
+
+        if (input.type === 'radio') {
+          document.querySelectorAll(`input[name="${name}"]`).forEach(inp => {
+            inp.closest('.option-card').classList.remove('selected');
+          });
+          input.checked = true;
+          this.classList.add('selected');
+
+          // Check for conditional triggers
+          const triggerId = this.getAttribute('data-trigger');
+          if (triggerId) {
+            const show = this.getAttribute('data-show') === 'true';
+            document.getElementById(triggerId).style.display = show ? 'block' : 'none';
+          }
+        }
+
+        this.closest('.question-item').classList.remove('has-error');
+      });
+    });
+
+    // Handle Tags
+    document.querySelectorAll('.tag-item').forEach(tag => {
+      tag.addEventListener('click', function () {
+        const input = this.querySelector('input');
+        input.checked = !input.checked;
+        this.classList.toggle('active', input.checked);
+        this.closest('.question-item').classList.remove('has-error');
+      });
+    });
+
+    function updateProgress() {
+      const progress = (currentStep / TOTAL_STEPS) * 100;
+      progressBar.style.width = `${progress}%`;
+      stepCounter.innerText = `${currentStep} of ${TOTAL_STEPS} Steps`;
+
+      navBar.style.display = currentStep > 0 ? 'flex' : 'none';
+      document.getElementById('backBtn').disabled = currentStep === 1;
+
+      if (currentStep === TOTAL_STEPS) {
+        document.getElementById('nextBtn').innerText = 'Complete Journey';
+      } else {
+        document.getElementById('nextBtn').innerText = 'Continue Journey →';
+      }
+    }
+
+    function validateStep(step) {
+      let isValid = true;
+      const stepEl = document.querySelector(`.form-step[data-step="${step}"]`);
+      if (!stepEl) return true;
+
+      const requiredItems = stepEl.querySelectorAll('.question-item[data-required="true"]');
+
+      requiredItems.forEach(item => {
+        const type = item.getAttribute('data-type');
+        let answered = false;
+
+        if (type === 'radio') {
+          answered = item.querySelector('input:checked');
+        } else if (type === 'checkbox') {
+          answered = item.querySelector('input:checked');
+        } else if (type === 'text') {
+          answered = item.querySelector('.text-input').value.trim().length > 0;
+        }
+
+        if (!answered) {
+          item.classList.add('has-error');
+          isValid = false;
+        } else {
+          item.classList.remove('has-error');
+        }
+      });
+
+      return isValid;
+    }
+
+    function nextStep() {
+      if (currentStep > 0 && !validateStep(currentStep)) {
+        const firstError = document.querySelector('.has-error');
+        if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
+      const active = document.querySelector('.form-step.active');
+
+      if (currentStep === TOTAL_STEPS) {
+        showSuccess();
+      } else {
+        active.classList.remove('active');
+        active.classList.add('exit');
+
+        setTimeout(() => {
+          active.classList.remove('exit');
+          currentStep++;
+          const next = document.querySelector(`.form-step[data-step="${currentStep}"]`);
+          next.classList.add('active');
+          updateProgress();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 300);
+      }
+    }
+
+    function prevStep() {
+      if (currentStep <= 1) return;
+      const active = document.querySelector('.form-step.active');
+      active.classList.remove('active');
+
+      currentStep--;
+      const prev = document.querySelector(`.form-step[data-step="${currentStep}"]`);
+      prev.classList.add('active');
+      updateProgress();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showSuccess() {
+      form.style.display = 'none';
+      navBar.style.display = 'none';
+      successScreen.style.display = 'block';
+      progressBar.style.width = '100%';
+      stepCounter.innerText = 'Shared Successfully';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    document.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && currentStep > 0) {
+        const activeItem = document.activeElement;
+        if (activeItem.tagName !== 'TEXTAREA') {
+          e.preventDefault();
+          nextStep();
+        }
+      }
+    });
+
+    updateProgress();
+  </script>
+</body>
+
+</html>

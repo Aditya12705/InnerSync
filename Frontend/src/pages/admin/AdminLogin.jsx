@@ -25,8 +25,12 @@ export function AdminLogin() {
     }
 
     try {
-      await loginAdmin(counselor, password);
-      navigate('/counselor/dashboard');
+      const data = await loginAdmin(counselor, password);
+      if (data.user.role === 'admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/counselor/dashboard');
+      }
     } catch (err) {
       setError(err.message || 'Invalid credentials. Please try again.');
       console.error('Login error:', err);
@@ -40,24 +44,22 @@ export function AdminLogin() {
           <span className={styles.brandName}>InnerSync</span>
           <span className={styles.tagline}>Sanctuary for your mind</span>
 
-          <h2 className={styles.title}>Counselor Portal</h2>
-          <p className={styles.subtitle}>Welcome back, professional. Log in to access your dashboard and support your students.</p>
+          <h2 className={styles.title}>Admin Portal</h2>
+          <p className={styles.subtitle}>System administration. Log in with your credentials to manage the platform.</p>
         </div>
 
         {error && <div className={styles.error}>{error}</div>}
 
         <form onSubmit={handleSubmit}>
           <div className={styles.formGroup}>
-            <label>Select Counselor</label>
-            <select
+            <label>Username</label>
+            <input
+              type="text"
               value={counselor}
               onChange={(e) => setCounselor(e.target.value)}
               required
-            >
-              <option value="">-- Select Counselor --</option>
-              <option value="rajat">Dr. Rajat Sharma</option>
-              <option value="iyer">Ms. R Iyer</option>
-            </select>
+              placeholder="Enter admin username"
+            />
           </div>
 
           <div className={styles.formGroup}>
@@ -72,7 +74,7 @@ export function AdminLogin() {
           </div>
 
           <button type="submit" className={styles.submitBtn}>
-            Sign In as Counselor
+            Sign In as Admin
           </button>
 
           <footer className={styles.footer}>

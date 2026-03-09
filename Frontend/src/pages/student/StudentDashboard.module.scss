@@ -284,3 +284,22 @@
     transform: translateY(-2px);
   }
 }
+
+.mobileMirror {
+  display: none;
+
+  @media (max-width: 1100px) {
+    display: block;
+    margin-bottom: 24px;
+
+    .mirrorLabel {
+      display: block;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+  }
+}

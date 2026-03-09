@@ -137,11 +137,11 @@ h6 {
   gap: 8px;
   padding: 12px 24px;
   border-radius: var(--radius-md);
-  border: 1px solid transparent;
+  border: 1px solid var(--border-strong);
   font-weight: 600;
   font-size: 15px;
-  color: #ffffff;
-  background: var(--panel-3);
+  color: var(--text);
+  background: var(--panel-2);
   cursor: pointer;
   transition: var(--transition);
 }
@@ -156,8 +156,10 @@ h6 {
 }
 
 .btn.primary {
+  background: var(--primary);
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   border-color: var(--primary-dark);
+  color: #ffffff;
 }
 
 .btn.danger {

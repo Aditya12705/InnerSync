@@ -1,11 +1,12 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Bot,
   Users,
   Stethoscope,
   BookOpen,
   BarChart3,
-  AlertTriangle
+  AlertTriangle,
+  ArrowLeft
 } from 'lucide-react';
 import styles from './ChooseSupport.module.scss';
 
@@ -62,11 +63,25 @@ const supportOptions = [
 ];
 
 export function ChooseSupport() {
+  const navigate = useNavigate();
   return (
     <div className={styles.support}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>How can we support you?</h1>
-        <p className={styles.subtitle}>Select the type of help that feels right for you today.</p>
+      <div className={styles.header} style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
+        <button
+          onClick={() => navigate(-1)}
+          style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            width: '40px', height: '40px', borderRadius: '50%',
+            backgroundColor: 'var(--panel-2, #ffffff)', border: '1px solid var(--border)',
+            cursor: 'pointer', color: 'var(--text-dark)', marginTop: '4px', flexShrink: 0
+          }}
+        >
+          <ArrowLeft size={20} />
+        </button>
+        <div style={{ flexGrow: 1, textAlign: 'center', paddingRight: '40px' }}>
+          <h1 className={styles.title} style={{ marginTop: 0 }}>How can we support you?</h1>
+          <p className={styles.subtitle} style={{ marginBottom: 0 }}>Select the type of help that feels right for you today.</p>
+        </div>
       </div>
 
       <div className={styles.supportGrid}>

@@ -1,4 +1,7 @@
 import { useMemo, useState } from 'react';
+import { InnerSyncForm } from '../../components/forms/InnerSyncForm.jsx';
+import { ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const assessmentData = {
   'phq-9': {
@@ -75,7 +78,9 @@ const answerOptions = [
 ];
 
 export function Assessment() {
+  const navigate = useNavigate();
   const [selectedAssessment, setSelectedAssessment] = useState(null);
+  const [showInnerSyncForm, setShowInnerSyncForm] = useState(false);
   const [answers, setAnswers] = useState([]);
   const [submitted, setSubmitted] = useState(false);
   const [cursor, setCursor] = useState(0);
@@ -88,6 +93,7 @@ export function Assessment() {
     setAnswers(Array(assessmentData[type].questions.length).fill(null));
     setSubmitted(false);
     setCursor(0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleAnswerChange = (index, value) => {
@@ -140,39 +146,150 @@ export function Assessment() {
   const interpretation = currentAssessment && submitted ? currentAssessment.interpretations[severity] : '';
   const isCurrentQuestionAnswered = answers[cursor] !== null;
 
+  if (showInnerSyncForm) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+          <button
+            onClick={() => setShowInnerSyncForm(false)}
+            style={{
+              marginBottom: '1rem',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '10px 20px',
+              backgroundColor: 'var(--panel-2, #ffffff)',
+              color: 'var(--text-dark, #2c2c28)',
+              border: '1px solid var(--border, #e9e9e2)',
+              borderRadius: '999px',
+              fontSize: '15px',
+              fontWeight: '500',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--input-bg, #f9f7f2)';
+              e.currentTarget.style.borderColor = 'var(--primary-light, #6a7e5d)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--panel-2, #ffffff)';
+              e.currentTarget.style.borderColor = 'var(--border, #e9e9e2)';
+            }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to Assessments
+          </button>
+        </div>
+        <div className="card" style={{ padding: 0, overflow: 'hidden', border: 'none', background: 'transparent', boxShadow: 'none' }}>
+          <InnerSyncForm onSubmitSuccess={(data) => console.log('Form Submitted', data)} />
+        </div>
+      </div>
+    );
+  }
+
   if (!selectedAssessment) {
     return (
-      <div className="grid" style={{ gap: 24 }}>
-        <section className="card">
-          <h1>InnerSync Self-Assessment</h1>
-          <p>Select an assessment below to better understand your current mental well-being.</p>
-        </section>
-        {Object.keys(assessmentData).map(key => (
-          <div key={key} className="card">
-            <h3>{assessmentData[key].title}</h3>
-            <p>{assessmentData[key].description}</p>
-            <button className="btn primary" onClick={() => handleSelectAssessment(key)}>Start Assessment</button>
+      <div className="grid" style={{ gap: 32 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '-16px' }}>
+          <button
+            onClick={() => navigate(-1)}
+            style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              width: '40px', height: '40px', borderRadius: '50%',
+              backgroundColor: 'var(--panel-2, #ffffff)', border: '1px solid var(--border)',
+              cursor: 'pointer', color: 'var(--text-dark)'
+            }}
+          >
+            <ArrowLeft size={20} />
+          </button>
+          <h1 style={{ margin: 0, fontSize: '1.75rem', color: 'var(--text-dark)' }}>Assessments</h1>
+        </div>
+
+        {/* Main InnerSync Journey Card */}
+        <section className="card" style={{
+          background: 'linear-gradient(135deg, var(--bg-cream, #f5f5f0), #ffffff)',
+          border: '1px solid var(--primary-light)',
+          boxShadow: '0 8px 30px rgba(74, 93, 63, 0.08)'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
+            <img src="/images/logo.png" alt="InnerSync Logo" style={{ width: '64px', height: '64px', objectFit: 'contain' }} />
+            <h1 style={{ fontFamily: '"Playfair Display", serif', color: 'var(--primary-dark)', margin: 0 }}>InnerSync Guided Intake Journey</h1>
           </div>
-        ))}
+          <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)', marginBottom: '24px' }}>
+            Our comprehensive 7-step pre-counselling assessment designed to understand your well-being, lifestyle, and support needs.
+            Takes about 5-8 minutes and helps us connect you with the right path forward.
+          </p>
+          <button
+            className="btn"
+            style={{ padding: '16px 32px', fontSize: '1.1rem', backgroundColor: 'var(--primary)', color: 'white', borderRadius: '999px', border: 'none', cursor: 'pointer', fontWeight: 600 }}
+            onClick={() => {
+              setShowInnerSyncForm(true);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          >
+            Start Your Journey →
+          </button>
+        </section>
+
+        {/* Secondary Clinical Tests Section */}
+        <div>
+          <h2 style={{ marginBottom: '16px', color: 'var(--text-dark)' }}>Specific Clinical Tests</h2>
+          <p style={{ color: 'var(--text-muted)', marginBottom: '24px' }}>Standard assessments measuring specific aspects of mental health like anxiety or depression.</p>
+          <div className="grid" style={{ gap: 24, gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' }}>
+            {Object.keys(assessmentData).map(key => (
+              <div key={key} className="card" style={{ display: 'flex', flexDirection: 'column' }}>
+                <h3 style={{ fontSize: '1.2rem' }}>{assessmentData[key].title}</h3>
+                <p style={{ fontSize: '0.95rem', flexGrow: 1, color: 'var(--text-secondary)' }}>{assessmentData[key].description}</p>
+                <button
+                  className="btn"
+                  style={{ width: '100%', marginTop: '16px', backgroundColor: 'var(--primary)', color: 'white', borderRadius: '999px' }}
+                  onClick={() => handleSelectAssessment(key)}
+                >
+                  Take Test
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
 
   if (submitted) {
     return (
-      <div className="card">
-        <h2>Assessment Report: {currentAssessment.title}</h2>
-        <div style={{ textAlign: 'center', margin: '2rem 0' }}>
-          <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>Your Score</p>
-          <p style={{ fontSize: '4.5rem', fontWeight: '700', color: 'var(--primary)', margin: 0, lineHeight: 1 }}>{totalScore}</p>
-          <p style={{ fontSize: '1.25rem', color: 'var(--text)', fontWeight: 500, textTransform: 'capitalize', marginTop: '1rem' }}>{severity.replace('-', ' ')}</p>
+      <div className="grid" style={{ gap: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '-16px' }}>
+          <button
+            onClick={() => setSelectedAssessment(null)}
+            style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              width: '40px', height: '40px', borderRadius: '50%',
+              backgroundColor: 'var(--panel-2, #ffffff)', border: '1px solid var(--border)',
+              cursor: 'pointer', color: 'var(--text-dark)'
+            }}
+          >
+            <ArrowLeft size={20} />
+          </button>
+          <h1 style={{ margin: 0, fontSize: '1.75rem', color: 'var(--text-dark)' }}>Assessment Report</h1>
         </div>
-        <div>
-          <h4>Interpretation</h4>
-          <p>{interpretation}</p>
-        </div>
-        <div style={{ marginTop: '2rem' }}>
-          <button className="btn" onClick={() => setSelectedAssessment(null)}>Take Another Assessment</button>
+        <div className="card">
+          <h2 style={{ marginTop: 0 }}>{currentAssessment.title}</h2>
+          <div style={{ textAlign: 'center', margin: '2rem 0' }}>
+            <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>Your Score</p>
+            <p style={{ fontSize: '4.5rem', fontWeight: '700', color: 'var(--primary)', margin: 0, lineHeight: 1 }}>{totalScore}</p>
+            <p style={{ fontSize: '1.25rem', color: 'var(--text)', fontWeight: 500, textTransform: 'capitalize', marginTop: '1rem' }}>{severity.replace('-', ' ')}</p>
+          </div>
+          <div>
+            <h4>Interpretation</h4>
+            <p>{interpretation}</p>
+          </div>
+          <div style={{ marginTop: '2rem' }}>
+            <button className="btn primary" onClick={() => setSelectedAssessment(null)}>Take Another Assessment</button>
+          </div>
         </div>
       </div>
     );
@@ -180,8 +297,21 @@ export function Assessment() {
 
   return (
     <div className="grid" style={{ gap: 24 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '-16px' }}>
+        <button
+          onClick={() => setSelectedAssessment(null)}
+          style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            width: '40px', height: '40px', borderRadius: '50%',
+            backgroundColor: 'var(--panel-2, #ffffff)', border: '1px solid var(--border)',
+            cursor: 'pointer', color: 'var(--text-dark)'
+          }}
+        >
+          <ArrowLeft size={20} />
+        </button>
+        <h1 style={{ margin: 0, fontSize: '1.75rem', color: 'var(--text-dark)' }}>{currentAssessment.title}</h1>
+      </div>
       <section className="card">
-        <h2>{currentAssessment.title}</h2>
         <p>Over the last 2 weeks, how often have you been bothered by any of the following problems?</p>
         <div style={{ height: 10, background: 'var(--input-bg)', border: '1px solid var(--border)', borderRadius: 999, overflow: 'hidden' }}>
           <div style={{ height: '100%', width: `${((cursor + 1) / questions.length) * 100}%`, background: 'linear-gradient(135deg, var(--primary-dark), var(--primary))', borderRadius: 999, transition: 'width 0.3s ease-in-out' }} />
@@ -234,7 +364,7 @@ export function Assessment() {
         <div style={{ display: 'flex', gap: 8, marginTop: 24 }}>
           <button className="btn" onClick={prevQuestion} disabled={cursor === 0}>Back</button>
           {cursor < questions.length - 1 ? (
-            <button className="btn" onClick={nextQuestion} disabled={!isCurrentQuestionAnswered}>Next</button>
+            <button className="btn primary" onClick={nextQuestion} disabled={!isCurrentQuestionAnswered}>Next</button>
           ) : (
             <button className="btn primary" onClick={handleSubmit} disabled={!isCurrentQuestionAnswered}>Submit</button>
           )}

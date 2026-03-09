@@ -10,8 +10,10 @@ import {
   Moon,
   Zap,
   BookOpen,
-  ChevronRight
+  ChevronRight,
+  ArrowLeft
 } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import styles from './SelfHelp.module.scss'
 
 const videos = [
@@ -36,6 +38,7 @@ const sounds = [
 ]
 
 export function SelfHelp() {
+  const navigate = useNavigate()
   const [activeVideo, setActiveVideo] = useState(null)
   const [filter, setFilter] = useState('All')
 
@@ -85,9 +88,22 @@ export function SelfHelp() {
 
   return (
     <div className={styles.selfHelpContainer}>
-      <header className={styles.header}>
-        <h1>Self-Help Library</h1>
-        <p>Your curated collection of tools for mental clarity and emotional strength.</p>
+      <header className={styles.header} style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
+        <button
+          onClick={() => navigate(-1)}
+          style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            width: '40px', height: '40px', borderRadius: '50%',
+            backgroundColor: 'var(--panel-2, #ffffff)', border: '1px solid var(--border)',
+            cursor: 'pointer', color: 'var(--text-dark)', marginTop: '4px', flexShrink: 0
+          }}
+        >
+          <ArrowLeft size={20} />
+        </button>
+        <div>
+          <h1 style={{ margin: 0, marginBottom: '8px' }}>Self-Help Library</h1>
+          <p style={{ margin: 0 }}>Your curated collection of tools for mental clarity and emotional strength.</p>
+        </div>
       </header>
 
       <div className={styles.controls}>

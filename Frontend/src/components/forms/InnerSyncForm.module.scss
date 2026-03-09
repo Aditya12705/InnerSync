@@ -1,0 +1,494 @@
+.pageContainer {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  font-family: inherit;
+  color: var(--text-dark, #2c2c28);
+}
+
+/* Base Vars mapped to global context if possible */
+$primary: var(--primary, #4a5d3f);
+$primaryLight: var(--primary-light, #6a7e5d);
+$primaryDark: var(--primary-dark, #32412b);
+$bgCream: var(--panel-bg, #f5f5f0);
+$cardBg: var(--panel-2, #ffffff);
+$inputBg: var(--input-bg, #f9f7f2);
+$textDark: var(--text-dark, #2c2c28);
+$textMuted: var(--text-muted, #6e6e66);
+$accentRed: var(--danger, #a33b33);
+$borderColor: var(--border, rgba(74, 93, 63, 0.15));
+$shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+$shadowHover: 0 8px 30px rgba(74, 93, 63, 0.12);
+$radius: 20px;
+$radiusSm: 12px;
+$transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+/* Progress System */
+.journeyHeader {
+  margin-bottom: 32px;
+}
+
+.progressContainer {
+  background: $cardBg;
+  padding: 20px 24px;
+  border-radius: $radiusSm;
+  border: 1px solid $borderColor;
+  box-shadow: $shadow;
+}
+
+.progressMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.brandMini {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: $primary;
+  font-size: 18px;
+  font-family: '"Playfair Display", serif';
+}
+
+.privacyBadge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: $primaryDark;
+  background: rgba(74, 93, 63, 0.1);
+  padding: 4px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stepIndicator {
+  font-size: 13px;
+  font-weight: 600;
+  color: $textMuted;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.progressTrack {
+  height: 8px;
+  background: var(--input-bg, #e9e9e2);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, $primaryLight, $primary);
+  transition: width 0.6s $transition;
+  border-radius: 10px;
+}
+
+/* Step Management */
+.formStep {
+  display: none;
+  opacity: 0;
+  transform: translateY(15px);
+  transition: all 0.4s $transition;
+}
+
+.formStepActive {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+  animation: slideFadeIn 0.5s $transition forwards;
+}
+
+@keyframes slideFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.introCard {
+  background: $cardBg;
+  padding: 60px 40px;
+  border-radius: $radius;
+  text-align: center;
+  box-shadow: $shadow;
+  border: 1px solid $borderColor;
+  position: relative;
+  overflow: hidden;
+}
+
+.introCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, $primaryLight, $primary);
+}
+
+.introCard h1 {
+  font-family: '"Playfair Display", serif';
+  font-size: 40px;
+  margin-bottom: 20px;
+  color: $primaryDark;
+  line-height: 1.2;
+}
+
+.introCard p {
+  color: $textMuted;
+  font-size: 17px;
+  line-height: 1.6;
+  margin-bottom: 32px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Question Styling */
+.questionSet {
+  background: $cardBg;
+  padding: 40px;
+  border-radius: $radius;
+  box-shadow: $shadow;
+  border: 1px solid $borderColor;
+}
+
+.sectionTag {
+  display: inline-block;
+  padding: 6px 16px;
+  background: rgba(74, 93, 63, 0.1);
+  color: $primaryDark;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 28px;
+}
+
+.questionItem {
+  margin-bottom: 40px;
+}
+
+.questionItem:last-child {
+  margin-bottom: 0;
+}
+
+.questionLabel {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+  line-height: 1.4;
+  color: $textDark;
+}
+
+.questionHint {
+  font-size: 14px;
+  color: $textMuted;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.requiredDot {
+  color: $accentRed;
+  margin-left: 4px;
+}
+
+/* Input Refinement - Upgraded */
+.optionsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.optionCard {
+  padding: 16px 20px;
+  border: 2px solid $inputBg;
+  border-radius: $radiusSm;
+  cursor: pointer;
+  transition: all 0.2s $transition;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 500;
+  font-size: 15px;
+  background: $inputBg;
+  color: $textDark;
+}
+
+.optionCard:hover {
+  border-color: rgba(74, 93, 63, 0.3);
+  background: #fdfdfa;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.optionCard input[type="radio"],
+.optionCard input[type="checkbox"] {
+  accent-color: $primary;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.optionCardSelected {
+  border-color: $primary;
+  background-color: rgba(74, 93, 63, 0.05);
+  color: $primaryDark;
+  font-weight: 600;
+}
+
+.textInput {
+  width: 100%;
+  padding: 16px 20px;
+  border: 2px solid $inputBg;
+  border-radius: $radiusSm;
+  font-family: inherit;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.2s $transition;
+  background: $inputBg;
+  color: $textDark;
+}
+
+.textInput:focus {
+  border-color: $primary;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(74, 93, 63, 0.1);
+}
+
+textarea.textInput {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Buttons */
+.navigationBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 32px;
+}
+
+.btn {
+  padding: 14px 32px;
+  border-radius: 999px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s $transition;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  letter-spacing: 0.2px;
+}
+
+.btnPrimary {
+  background: $primary;
+  color: #ffffff !important;
+  box-shadow: 0 4px 15px rgba(74, 93, 63, 0.3);
+}
+
+.btnPrimary:hover {
+  background: $primaryDark;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(74, 93, 63, 0.4);
+}
+
+.btnOutline {
+  background: $cardBg;
+  color: $primaryDark;
+  border: 2px solid $primary;
+}
+
+.btnOutline:hover {
+  background: rgba(74, 93, 63, 0.08);
+  border-color: $primaryDark;
+  transform: translateY(-2px);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Tags Selection */
+.tagsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.tagItem {
+  padding: 10px 20px;
+  background: $inputBg;
+  border: 2px solid $inputBg;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  user-select: none;
+  display: flex;
+  align-items: center;
+}
+
+.tagItem input[type="checkbox"] {
+  display: none;
+}
+
+.tagItem:hover {
+  border-color: rgba(74, 93, 63, 0.3);
+  transform: translateY(-1px);
+}
+
+.tagItemActive {
+  background: $primary;
+  color: white;
+  border-color: $primary;
+  box-shadow: 0 4px 10px rgba(74, 93, 63, 0.2);
+}
+
+/* Safety & Success */
+.safetyBox {
+  background: rgba(163, 59, 51, 0.05);
+  border-left: 4px solid $accentRed;
+  padding: 16px 20px;
+  border-radius: 0 $radiusSm $radiusSm 0;
+  margin-top: 24px;
+}
+
+.safetyBox p {
+  color: #7a3a35;
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.successScreen {
+  text-align: center;
+  padding: 80px 40px;
+  background: $cardBg;
+  border-radius: $radius;
+  box-shadow: $shadowHover;
+  border: 1px solid $borderColor;
+}
+
+.successIcon {
+  font-size: 64px;
+  margin-bottom: 24px;
+  display: inline-block;
+  animation: scaleBounce 0.5s $transition;
+}
+
+@keyframes scaleBounce {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+
+  60% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.errorText {
+  color: $accentRed;
+  font-size: 13px;
+  margin-top: 8px;
+  font-weight: 600;
+  display: none;
+  animation: slideDown 0.2s $transition;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hasError .errorText {
+  display: block;
+}
+
+.hasError .optionCard,
+.hasError .textInput {
+  border-color: rgba(163, 59, 51, 0.5);
+  background: rgba(163, 59, 51, 0.02);
+}
+
+@media (max-width: 768px) {
+  .pageContainer {
+    padding: 0;
+  }
+
+  .introCard,
+  .questionSet,
+  .successScreen {
+    padding: 32px 20px;
+    border-radius: $radiusSm;
+  }
+
+  .introCard h1 {
+    font-size: 32px;
+  }
+
+  .questionLabel {
+    font-size: 18px;
+  }
+
+  .optionsGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .btn {
+    padding: 14px 24px;
+    font-size: 15px;
+    flex: 1;
+  }
+
+  .navigationBar {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navigationBar {
+    flex-direction: column-reverse;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}

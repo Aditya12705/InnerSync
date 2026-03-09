@@ -1,5 +1,19 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+  }, [pathname]);
+
+  return null;
+}
 import { AppLayout } from './components/layout/AppLayout.jsx';
 import { StudentLanding } from './pages/student/StudentLanding.jsx';
 import { StudentDashboard } from './pages/student/StudentDashboard.jsx';
@@ -18,6 +32,7 @@ import { CaseMonitoring } from './pages/admin/CaseMonitoring.jsx';
 import { ReportsAnalytics } from './pages/admin/ReportsAnalytics.jsx';
 import { OfflineCounselorSupport } from './pages/admin/OfflineCounselorSupport.jsx';
 import { UpdatesNotification } from './pages/admin/UpdatesNotification.jsx';
+import { AssessmentResults } from './pages/admin/AssessmentResults.jsx';
 import { AuthProvider, useAuth } from './context/AuthContext.jsx';
 import { MoodProvider } from './context/MoodContext.jsx';
 import Login from './pages/auth/Login.jsx';
@@ -35,6 +50,8 @@ function AppRoutes() {
       <Route index element={<StudentLanding />} />
       <Route path="login" element={<Login />} />
       <Route path="student/register" element={<Register />} />
+      <Route path="admin/login" element={<AdminLogin />} />
+      <Route path="counselor/login" element={<AdminLogin />} />
 
       {/* Protected routes */}
       <Route element={<AppLayout />}>
@@ -49,24 +66,19 @@ function AppRoutes() {
         <Route path="student/counselor" element={<Counselor />} />
         <Route path="student/feedback" element={<Feedback />} />
 
-        <Route path="counselor">
-          <Route index element={
-            <button
-              onClick={() => navigate('/counselor/login')}
-              className={`${styles.btn} ${styles['btn-admin']}`}
-            >
-              <AdminIcon className={styles['btn-icon']} />
-              Counsellor Login
-            </button>
-          } />
-          <Route path="login" element={<AdminLogin />} />
-          <Route path="dashboard" element={<RequireCounselor><AdminDashboard /></RequireCounselor>} />
-          <Route path="users" element={<RequireCounselor><UserManagement /></RequireCounselor>} />
-          <Route path="cases" element={<RequireCounselor><CaseMonitoring /></RequireCounselor>} />
-          <Route path="reports" element={<RequireCounselor><ReportsAnalytics /></RequireCounselor>} />
-          <Route path="offline-support" element={<RequireCounselor><OfflineCounselorSupport /></RequireCounselor>} />
-          <Route path="updates" element={<RequireCounselor><UpdatesNotification /></RequireCounselor>} />
-        </Route>
+        <Route path="counselor/dashboard" element={<RequireCounselor><AdminDashboard /></RequireCounselor>} />
+        <Route path="counselor/users" element={<RequireCounselor><UserManagement /></RequireCounselor>} />
+        <Route path="counselor/cases" element={<RequireCounselor><CaseMonitoring /></RequireCounselor>} />
+        <Route path="counselor/reports" element={<RequireCounselor><ReportsAnalytics /></RequireCounselor>} />
+        <Route path="counselor/assessments" element={<RequireCounselor><Assessment /></RequireCounselor>} />
+        <Route path="counselor/offline-support" element={<RequireCounselor><OfflineCounselorSupport /></RequireCounselor>} />
+        <Route path="counselor/updates" element={<RequireCounselor><UpdatesNotification /></RequireCounselor>} />
+        <Route path="counselor/assessment-results" element={<RequireCounselor><AssessmentResults /></RequireCounselor>} />
+
+        {/* Separated Admin Routes */}
+        <Route path="admin/dashboard" element={<RequireAdmin><AdminDashboard /></RequireAdmin>} />
+        <Route path="admin/assessment-results" element={<RequireAdmin><AssessmentResults /></RequireAdmin>} />
+        <Route path="admin" element={<Navigate to="/admin/login" replace />} />
       </Route>
     </Routes>
   );
@@ -81,12 +93,11 @@ function ChatbotRenderer() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <MoodProvider>
-        <AppRoutes />
-        <ChatbotRenderer />
-      </MoodProvider>
-    </AuthProvider>
+    <>
+      <ScrollToTop />
+      <AppRoutes />
+      <ChatbotRenderer />
+    </>
   );
 }
 
@@ -96,12 +107,42 @@ function RequireStudent({ children }) {
   return children;
 }
 
-function RequireCounselor({ children }) {
+function RequireAdmin({ children }) {
   const { adminLoggedIn, user } = useAuth();
   const [isReady, setIsReady] = useState(false);
 
   // Check if user is logged in and has the correct role
-  const isAuthorized = adminLoggedIn && user?.role === 'counselor';
+  const isAuthorized = adminLoggedIn && user?.role === 'admin';
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsReady(true);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!isReady) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100%' }}>
+        <div>Loading...</div>
+      </div>
+    );
+  }
+
+  if (!isAuthorized) {
+    return <Navigate to="/admin/login" replace />;
+  }
+
+  return children;
+}
+
+function RequireCounselor({ children }) {
+  const { adminLoggedIn, user } = useAuth();
+  const [isReady, setIsReady] = useState(false);
+
+  // Check if user is logged in and has the correct role (allow admin to see counselor pages)
+  const isAuthorized = adminLoggedIn && (user?.role === 'counselor' || user?.role === 'admin');
 
   useEffect(() => {
     // Small delay to ensure auth state is properly set

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Wind,
   Leaf,
@@ -11,7 +12,8 @@ import {
   Users,
   Send,
   Plus,
-  Star
+  Star,
+  ArrowLeft
 } from 'lucide-react';
 import styles from './PeerSupport.module.scss';
 
@@ -114,6 +116,7 @@ const COMMON_REACTIONS = [
 ];
 
 export function PeerSupport() {
+  const navigate = useNavigate();
   const [activeChannel, setActiveChannel] = useState('general');
   const [messages, setMessages] = useState(INITIAL_MESSAGES);
   const [newMessage, setNewMessage] = useState('');
@@ -193,12 +196,25 @@ export function PeerSupport() {
 
   return (
     <div className={styles.peerSupport}>
-      <div className={styles.header}>
-        <h1>Peer Support Channels</h1>
-        <p>Connect anonymously with others who understand your journey</p>
-        <div className={styles.anonymousIndicator}>
-          <ShieldCheck size={16} />
-          <span>Your identity is protected - All conversations are anonymous</span>
+      <div className={styles.header} style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
+        <button
+          onClick={() => navigate(-1)}
+          style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            width: '40px', height: '40px', borderRadius: '50%',
+            backgroundColor: 'var(--panel-2, #ffffff)', border: '1px solid var(--border)',
+            cursor: 'pointer', color: 'var(--text-dark)', marginTop: '4px', flexShrink: 0
+          }}
+        >
+          <ArrowLeft size={20} />
+        </button>
+        <div style={{ flexGrow: 1, textAlign: 'center', paddingRight: '40px' }}>
+          <h1 style={{ marginTop: 0 }}>Peer Support Channels</h1>
+          <p>Connect anonymously with others who understand your journey</p>
+          <div className={styles.anonymousIndicator} style={{ justifyContent: 'center' }}>
+            <ShieldCheck size={16} />
+            <span>Your identity is protected - All conversations are anonymous</span>
+          </div>
         </div>
       </div>
 

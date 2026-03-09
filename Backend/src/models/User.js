@@ -5,18 +5,19 @@ const userSchema = new mongoose.Schema({
   name: { type: String },
   email: { type: String, unique: true, sparse: true },
   username: { type: String, unique: true, sparse: true },
+  studentId: { type: String, unique: true, sparse: true },
   password: { type: String, required: true },
-  role: { type: String, enum: ['student','admin','counselor'], default: 'student' }
+  role: { type: String, enum: ['student', 'admin', 'counselor'], default: 'student' }
 }, { timestamps: true })
 
-userSchema.pre('save', async function(next){
+userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next()
   const salt = await bcrypt.genSalt(10)
   this.password = await bcrypt.hash(this.password, salt)
   next()
 })
 
-userSchema.methods.comparePassword = function(candidate){
+userSchema.methods.comparePassword = function (candidate) {
   return bcrypt.compare(candidate, this.password)
 }
 

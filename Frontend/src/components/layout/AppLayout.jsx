@@ -58,23 +58,11 @@ export function AppLayout() {
     return 'U';
   };
 
-  const handleGoBack = () => {
-    navigate(-1); // Navigates to the previous page in history
-  };
-
   return (
     <div className={styles.shell}>
       <header className={styles.header}>
         <div className={styles.headerContent}>
           <div className={styles.headerLeft}>
-            <button
-              onClick={handleGoBack}
-              aria-label="Go back"
-              title="Go back"
-              className={styles.backButton}
-            >
-              ←
-            </button>
             <Link to="/" className={styles.brand}>
               <img
                 src="/images/logo.png"
@@ -183,10 +171,6 @@ export function AppLayout() {
               </NavLink>
             </>
           )}
-          <div className={styles.drawerMood}>
-            <span className={styles.drawerSectionLabel}>Reframing Mirror</span>
-            <MoodIndicator showHistory={false} />
-          </div>
         </nav>
       </div>
       {mobileMenuOpen && <div className={styles.drawerOverlay} onClick={() => setMobileMenuOpen(false)}></div>}

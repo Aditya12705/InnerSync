@@ -1,18 +1,35 @@
+import { useState, useEffect } from 'react';
+import { AnalyticsAPI } from '../../services/api.js';
 import styles from './UserManagement.module.scss';
 
-const users = [
-  { id: 1, name: 'Aarav Sharma', email: 'aarav@uni.edu', role: 'Student', status: 'Active' },
-  { id: 2, name: 'Dia Mehta', email: 'dia@uni.edu', role: 'Student', status: 'Active' },
-  { id: 3, name: 'Kabir Singh', email: 'kabir@uni.edu', role: 'Student', status: 'Suspended' },
-  { id: 4, name: 'Dr. Emily Brown', email: 'emily@uni.edu', role: 'Counselor', status: 'Active' },
-];
-
 export function UserManagement() {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        setLoading(true);
+        const data = await AnalyticsAPI.getUsers();
+        setUsers(data);
+      } catch (err) {
+        console.error('Error fetching users:', err);
+        setError('Failed to load users');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUsers();
+  }, []);
+
+  if (loading) return <div className={styles.container}><p>Loading users...</p></div>;
+  if (error) return <div className={styles.container}><p className="error">{error}</p></div>;
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
         <h1 className={styles.title}>User Management</h1>
-        <button className="btn primary">Add New User</button>
       </header>
       <div className={`card ${styles.tableCard}`}>
         <div className={styles.tableWrapper}>
@@ -27,24 +44,26 @@ export function UserManagement() {
               </tr>
             </thead>
             <tbody>
-              {users.map(user => (
-                <tr key={user.id}>
+              {users.length > 0 ? users.map(user => (
+                <tr key={user._id}>
                   <td>{user.name}</td>
                   <td>{user.email}</td>
                   <td>{user.role}</td>
                   <td>
-                    <span className={`${styles.statusPill} ${styles[user.status.toLowerCase()]}`}>
-                      {user.status}
+                    <span className={`${styles.statusPill} ${styles.active}`}>
+                      Active
                     </span>
                   </td>
                   <td className={styles.actions}>
                     <button className="btn ghost">View</button>
-                    <button className="btn danger">
-                      {user.status === 'Suspended' ? 'Unsuspend' : 'Suspend'}
-                    </button>
+                    <button className="btn danger">Suspend</button>
                   </td>
                 </tr>
-              ))}
+              )) : (
+                <tr>
+                  <td colSpan="5" style={{ textAlign: 'center', padding: '20px' }}>No users found in database.</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

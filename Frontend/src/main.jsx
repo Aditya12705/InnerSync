@@ -4,6 +4,9 @@ import { BrowserRouter } from 'react-router-dom'
 import App from './App.jsx'
 import './styles/global.scss'
 
+import { AuthProvider } from './context/AuthContext.jsx'
+import { MoodProvider } from './context/MoodContext.jsx'
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter
@@ -12,7 +15,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         v7_relativeSplatPath: true
       }}
     >
-      <App />
+      <AuthProvider>
+        <MoodProvider>
+          <App />
+        </MoodProvider>
+      </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>
 )
