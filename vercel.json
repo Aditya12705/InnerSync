@@ -13,17 +13,14 @@
             }
         }
     ],
-    "routes": [
+    "rewrites": [
         {
-            "src": "/api/(.*)",
-            "dest": "Backend/src/server.js"
+            "source": "/api/(.*)",
+            "destination": "/Backend/src/server.js"
         },
         {
-            "handle": "filesystem"
-        },
-        {
-            "src": "/(.*)",
-            "dest": "Frontend/index.html"
+            "source": "/(.*)",
+            "destination": "/index.html"
         }
     ]
 }
