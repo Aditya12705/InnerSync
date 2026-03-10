@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { AlertCircle, CheckCircle2 } from 'lucide-react';
 import styles from './Login.module.scss';
 
 export function Login() {
@@ -68,8 +69,18 @@ export function Login() {
           <p className={styles.subtitle}>Sign in to continue your journey towards peace and clarity.</p>
         </div>
 
-        {error && <div className={styles.error}>{error}</div>}
-        {successMessage && <div className={styles.success}>{successMessage}</div>}
+        {error && (
+          <div className={styles.error}>
+            <AlertCircle />
+            <span>{error}</span>
+          </div>
+        )}
+        {successMessage && (
+          <div className={styles.success}>
+            <CheckCircle2 />
+            <span>{successMessage}</span>
+          </div>
+        )}
 
         <div className={styles.roleToggle}>
           <button

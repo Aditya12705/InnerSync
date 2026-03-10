@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { AlertCircle } from 'lucide-react';
 import styles from '../auth/Login.module.scss';
 
 export function AdminLogin() {
@@ -48,7 +49,12 @@ export function AdminLogin() {
           <p className={styles.subtitle}>System administration. Log in with your credentials to manage the platform.</p>
         </div>
 
-        {error && <div className={styles.error}>{error}</div>}
+        {error && (
+          <div className={styles.error}>
+            <AlertCircle />
+            <span>{error}</span>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit}>
           <div className={styles.formGroup}>

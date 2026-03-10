@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { AlertCircle, CheckCircle2 } from 'lucide-react';
 import { AuthAPI } from '../../services/api';
 import styles from '../auth/Login.module.scss';
 
@@ -67,7 +68,12 @@ export default function Register() {
           <p className={styles.subtitle}>Join our sanctuary and start your journey towards mental balance and academic success.</p>
         </div>
 
-        {error && <div className={styles.error}>{error}</div>}
+        {error && (
+          <div className={styles.error}>
+            <AlertCircle />
+            <span>{error}</span>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit}>
           <div className={styles.formGroup}>
