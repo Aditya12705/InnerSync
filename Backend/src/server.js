@@ -11,37 +11,13 @@ import appointmentRoutes from './routes/appointments.js';
 import feedbackRoutes from './routes/feedback.js';
 import aiRoutes from './routes/ai.js';
 import analyticsRoutes from './routes/analytics.js';
-import studentRoutes from './routes/student.js'; // Import the new student routes
+import studentRoutes from './routes/student.js';
 import { errorHandler } from './utils/errorHandler.js';
 
 dotenv.config();
 
 const app = express();
 
-// CORS configuration for development
-app.use(cors({
-  origin: true, // Allow all origins in development
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Content-Length', 'X-Requested-With']
-}));
-
-app.use(helmet());
-app.use(express.json());
-app.use(morgan('dev'));
-
-app.get('/', (req, res) => res.json({ status: 'ok', service: 'InnerSync API' }));
-
-app.use('/api/auth', authRoutes);
-app.use('/api/appointments', appointmentRoutes);
-app.use('/api/feedback', feedbackRoutes);
-app.use('/api/ai', aiRoutes);
-app.use('/api/analytics', analyticsRoutes);
-app.use('/api/student', studentRoutes); // Add the new student routes
-
-app.use(errorHandler);
-
-const PORT = process.env.PORT || 4000;
 const MONGO_URI = process.env.MONGO_URI || process.env.MONGODB_URI;
 
 // Disable buffering so we get immediate errors if not connected
@@ -58,10 +34,6 @@ const connectDB = async () => {
 
   try {
     console.log('Attempting to connect to MongoDB...');
-    // Log a masked version of the URI for debugging
-    const maskedURI = MONGO_URI.replace(/:([^@]+)@/, ':****@');
-    console.log(`Using URI: ${maskedURI.substring(0, 30)}...`);
-
     await mongoose.connect(MONGO_URI, {
       serverSelectionTimeoutMS: 5000,
       connectTimeoutMS: 10000,
@@ -74,6 +46,45 @@ const connectDB = async () => {
     throw err;
   }
 };
+
+// CORS configuration
+app.use(cors({
+  origin: true,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Content-Length', 'X-Requested-With']
+}));
+
+app.use(helmet());
+app.use(express.json());
+app.use(morgan('dev'));
+
+// 1. DATABASE CONNECT MIDDLEWARE (MUST BE BEFORE ROUTES)
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    res.status(503).json({
+      message: 'Database connection failed',
+      details: err.message
+    });
+  }
+});
+
+app.get('/', (req, res) => res.json({ status: 'ok', service: 'InnerSync API' }));
+
+// 2. ROUTES
+app.use('/api/auth', authRoutes);
+app.use('/api/appointments', appointmentRoutes);
+app.use('/api/feedback', feedbackRoutes);
+app.use('/api/ai', aiRoutes);
+app.use('/api/analytics', analyticsRoutes);
+app.use('/api/student', studentRoutes);
+
+app.use(errorHandler);
+
+const PORT = process.env.PORT || 4000;
 
 // If not on Vercel, start the server normally
 if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
@@ -90,13 +101,9 @@ if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
       }
       process.exit(1);
     });
+  }).catch(err => {
+    console.error('Initial DB connection failed:', err);
   });
 }
-
-// Ensure DB connects middleware-style for Vercel
-app.use(async (req, res, next) => {
-  await connectDB();
-  next();
-});
 
 export default app;
