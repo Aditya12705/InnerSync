@@ -118,7 +118,11 @@ router.post('/login', async (req, res) => {
     return res.status(401).json({ message: 'Invalid credentials' });
   } catch (error) {
     console.error('Login error:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({
+      message: 'Login internal error',
+      details: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 });
 
@@ -129,7 +133,11 @@ router.post('/register', async (req, res) => {
     res.status(201).json({ id: user._id })
   } catch (error) {
     console.error('Registration error:', error);
-    res.status(500).json({ message: 'Error creating user' });
+    res.status(500).json({
+      message: 'Registration internal error',
+      details: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 })
 
