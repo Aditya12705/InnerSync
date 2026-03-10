@@ -31,6 +31,29 @@ router.get('/assessments/submissions', protectRoute, async (req, res) => {
   }
 });
 
+// Submit a new assessment
+router.post('/assessments/submit', protectRoute, async (req, res) => {
+  try {
+    const { type, responses, totalScore, severity, recommendations } = req.body;
+
+    const newAssessment = new Assessment({
+      studentId: req.user.id,
+      type: type.toUpperCase(),
+      responses,
+      totalScore,
+      severity: severity.toLowerCase().replace(' ', '_'),
+      recommendations,
+      completedAt: new Date()
+    });
+
+    await newAssessment.save();
+    res.status(201).json({ message: 'Assessment submitted successfully', assessment: newAssessment });
+  } catch (error) {
+    console.error('Error submitting assessment:', error);
+    res.status(500).json({ message: 'Error submitting assessment', error: error.message });
+  }
+});
+
 // Get dashboard overview statistics
 router.get('/overview', protectRoute, async (req, res) => {
   try {

@@ -73,7 +73,7 @@ export function ChatbotWidget() {
             <div className={styles.header}>
               <div className={styles.headerInfo}>
                 <img src="/images/logo.png" alt="Logo" className={styles.logo} />
-                <span className={styles.title}>AI Assistant</span>
+                <span className={styles.title}>InnerSync Assistant</span>
               </div>
               <select value={lang} onChange={handleLangChange} className={styles.langSelect}>
                 <option value="en">English</option>

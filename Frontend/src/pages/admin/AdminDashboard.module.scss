@@ -310,3 +310,104 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 768px) {
+  .dashboardContainer {
+    gap: 20px;
+    padding: 12px;
+  }
+
+  .header {
+    flex-direction: column;
+    padding: 24px 20px;
+    gap: 20px;
+    text-align: center;
+    align-items: center;
+  }
+
+  .headerLeft {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    align-items: center;
+
+    h1 {
+      font-size: 20px;
+      line-height: 1.3;
+      margin: 0;
+    }
+  }
+
+  .logo {
+    height: 48px;
+    margin: 0 auto;
+  }
+
+  .headerRight {
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    align-items: center;
+  }
+
+  .adminStatus {
+    font-size: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .logoutBtn {
+    width: 100%;
+    justify-content: center;
+    padding: 12px;
+  }
+
+  .statsSection {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .statCard {
+    padding: 24px;
+    gap: 16px;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .statIcon {
+    padding: 12px;
+    margin: 0 auto;
+  }
+
+  .statValue {
+    font-size: 28px;
+  }
+
+  .contentGrid {
+    gap: 20px;
+  }
+
+  .cardHeader {
+    text-align: center;
+    flex-direction: column;
+    gap: 8px;
+
+    h3 {
+      font-size: 18px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .headerLeft h1 {
+    font-size: 18px;
+  }
+
+  .header {
+    padding: 20px 16px;
+  }
+
+  .statCard {
+    padding: 20px;
+  }
+}

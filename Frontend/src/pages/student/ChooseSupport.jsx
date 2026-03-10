@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import {
-  Bot,
+  Sparkles,
   Users,
   Stethoscope,
   BookOpen,
@@ -12,12 +12,12 @@ import styles from './ChooseSupport.module.scss';
 
 const supportOptions = [
   {
-    icon: Bot,
-    title: 'AI Companion',
-    description: 'Chat with our intelligent AI that understands your emotions and provides 24/7 support.',
-    features: ['Instant support', 'Always available', 'Multilingual'],
+    icon: Sparkles,
+    title: 'Inner Sanctuary',
+    description: 'Connect with a supportive guide that understands your emotions and provides 24/7 accompaniment.',
+    features: ['Instant support', 'Always available', 'Private space'],
     link: '/student/peer',
-    buttonText: 'Start Chatting',
+    buttonText: 'Enter Sanctuary',
   },
   {
     icon: Users,

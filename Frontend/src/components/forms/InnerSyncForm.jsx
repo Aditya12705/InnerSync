@@ -406,8 +406,8 @@ export function InnerSyncForm({ onSubmitSuccess }) {
                             <div className={`${styles.questionItem} ${errors.q23 ? styles.hasError : ''}`}>
                                 <label className={styles.questionLabel}>What kind of support are you seeking?<span className={styles.requiredDot}>*</span></label>
                                 <div className={styles.tagsContainer}>
-                                    {['Anonymous Support', 'AI Wellness', 'Counselling', 'Peer Groups', 'Resources'].map((label, idx) => {
-                                        const values = ['Anonymous', 'AI tools', 'Counselling', 'Peer group', 'Self-help'];
+                                    {['Anonymous Support', 'Wellness Guide', 'Counselling', 'Peer Groups', 'Resources'].map((label, idx) => {
+                                        const values = ['Anonymous', 'Guided tools', 'Counselling', 'Peer group', 'Self-help'];
                                         const value = values[idx];
                                         const icons = ['🗨', '🤖', '🧑‍⚕️', '🤝', '📚'];
                                         const isChecked = formData.q23.includes(value);

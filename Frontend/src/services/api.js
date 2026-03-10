@@ -129,6 +129,7 @@ export const AnalyticsAPI = {
   getActivityFeed: (limit) => apiGet(`/api/analytics/activity/feed?limit=${limit}`),
   getUsers: () => apiGet('/api/analytics/users'),
   getAssessmentSubmissions: () => apiGet('/api/analytics/assessments/submissions'),
+  submitAssessment: (payload) => apiPost('/api/analytics/assessments/submit', payload),
 };
 
 export const StudentAPI = {

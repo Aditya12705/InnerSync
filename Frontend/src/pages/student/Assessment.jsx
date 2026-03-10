@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react';
 import { InnerSyncForm } from '../../components/forms/InnerSyncForm.jsx';
+import { AnalyticsAPI } from '../../services/api.js';
+
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -114,10 +116,6 @@ export function Assessment() {
     }
   };
 
-  const handleSubmit = () => {
-    setSubmitted(true);
-  };
-
   const totalScore = answers.reduce((acc, val) => acc + (val || 0), 0);
 
   const getSeverity = (type, score) => {
@@ -140,6 +138,37 @@ export function Assessment() {
       return 'significant-distress';
     }
     return '';
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const responseData = {
+        type: selectedAssessment,
+        totalScore,
+        severity,
+        responses: questions.map((q, i) => ({
+          question: q,
+          answer: answers[i],
+          answerLabel: answerOptions.find(opt => opt.value === answers[i])?.label || ''
+        })),
+        recommendations: [interpretation]
+      };
+
+      await AnalyticsAPI.submitAssessment(responseData);
+      setSubmitted(true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (error) {
+      console.error('Error submitting assessment:', error);
+      // Still show result to user even if DB save fails
+      setSubmitted(true);
+    }
+  };
+
+  const getSeverityColor = (sev) => {
+    const s = sev.toLowerCase().replace('-', ' ').replace('_', ' ');
+    if (s.includes('severe') || s.includes('significant')) return 'var(--danger)';
+    if (s.includes('moderate')) return 'var(--warning)';
+    return 'var(--success)';
   };
 
   const severity = selectedAssessment ? getSeverity(selectedAssessment, totalScore) : '';
@@ -260,6 +289,7 @@ export function Assessment() {
   }
 
   if (submitted) {
+    const severityColor = getSeverityColor(severity);
     return (
       <div className="grid" style={{ gap: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '-16px' }}>
@@ -280,8 +310,8 @@ export function Assessment() {
           <h2 style={{ marginTop: 0 }}>{currentAssessment.title}</h2>
           <div style={{ textAlign: 'center', margin: '2rem 0' }}>
             <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>Your Score</p>
-            <p style={{ fontSize: '4.5rem', fontWeight: '700', color: 'var(--primary)', margin: 0, lineHeight: 1 }}>{totalScore}</p>
-            <p style={{ fontSize: '1.25rem', color: 'var(--text)', fontWeight: 500, textTransform: 'capitalize', marginTop: '1rem' }}>{severity.replace('-', ' ')}</p>
+            <p style={{ fontSize: '4.5rem', fontWeight: '700', color: severityColor, margin: 0, lineHeight: 1 }}>{totalScore}</p>
+            <p style={{ fontSize: '1.25rem', color: severityColor, fontWeight: 600, textTransform: 'capitalize', marginTop: '1rem' }}>{severity.replace('-', ' ')}</p>
           </div>
           <div>
             <h4>Interpretation</h4>

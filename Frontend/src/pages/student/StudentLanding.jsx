@@ -40,7 +40,7 @@ export function StudentLanding() {
     if (studentLoggedIn) {
       return "Continue your journey towards balance and clarity with InnerSync.";
     }
-    return "A peaceful space designed for your mental well-being. Connect with AI support, peers, or professional counselors at your own pace.";
+    return "A peaceful space designed for your mental well-being. Connect with compassionate support, peers, or professional counselors at your own pace.";
   };
 
   return (
@@ -112,7 +112,7 @@ export function StudentLanding() {
             <div className={styles.heroContent}>
               <div className={styles.badge}>
                 <Sparkles size={14} />
-                <span>Your AI Sanctuary</span>
+                <span>Your Inner Sanctuary</span>
               </div>
               <h1 className={styles.headline} key={animationKey}>
                 {getDynamicGreeting()}
@@ -158,8 +158,8 @@ export function StudentLanding() {
                     <Brain size={32} />
                   </div>
                   <div>
-                    <h4>Peaceful AI Support</h4>
-                    <p>Gentle, 24/7 intelligent accompaniment for your thoughts.</p>
+                    <h4>Peaceful Guidance</h4>
+                    <p>Gentle, 24/7 supportive accompaniment for your thoughts.</p>
                   </div>
                 </div>
                 <div className={styles.featureItem}>
@@ -186,7 +186,7 @@ export function StudentLanding() {
               <h2 className={styles.cardTitle}>Our Mission</h2>
               <div className={styles.aboutContent}>
                 <p>InnerSync is more than just a platform; it's a digital sanctuary built to support the modern student. We believe that mental wellbeing is the foundation of academic and personal growth.</p>
-                <p>By blending compassionate AI technology with human expertise, we provide a tiered support system that adapts to your unique emotional landscape.</p>
+                <p>By blending compassionate technology with human expertise, we provide a tiered support system that adapts to your unique emotional landscape.</p>
                 <h4>Confidential & Compassionate</h4>
                 <p>Your journey is private. We ensure the highest level of security so you can focus entirely on your healing and growth.</p>
               </div>
@@ -199,8 +199,8 @@ export function StudentLanding() {
           <div className={styles.supportGrid}>
             <div className={styles.supportCard}>
               <div className={styles.supportIcon}><Bird size={48} /></div>
-              <h3>AI Sanctuary</h3>
-              <p>Clarity and comfort through our serene AI companion.</p>
+              <h3>Inner Sanctuary</h3>
+              <p>Clarity and comfort through our serene support companion.</p>
               <Link to="/student/peer" className={styles.supportBtn}>Open Sanctuary</Link>
             </div>
             <div className={styles.supportCard}>
