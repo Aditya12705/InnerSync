@@ -44,14 +44,16 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 4000;
 const MONGO_URI = process.env.MONGO_URI || process.env.MONGODB_URI;
 
+// Disable buffering so we get immediate errors if not connected
+mongoose.set('bufferCommands', false);
+
 // For Vercel Serverless: Connect to DB once
 let isConnected = false;
 const connectDB = async () => {
   if (isConnected && mongoose.connection.readyState === 1) return;
 
   if (!MONGO_URI) {
-    console.error('CRITICAL: MONGO_URI is not defined in environment variables!');
-    throw new Error('Database configuration missing (MONGO_URI)');
+    throw new Error('Database configuration missing (MONGO_URI is undefined)');
   }
 
   try {
@@ -62,11 +64,13 @@ const connectDB = async () => {
 
     await mongoose.connect(MONGO_URI, {
       serverSelectionTimeoutMS: 5000,
+      connectTimeoutMS: 10000,
     });
     isConnected = true;
     console.log('Connected to MongoDB successfully');
   } catch (err) {
-    console.error('MongoDB connection error details:', err.message);
+    console.error('MongoDB connection error:', err.message);
+    isConnected = false;
     throw err;
   }
 };
