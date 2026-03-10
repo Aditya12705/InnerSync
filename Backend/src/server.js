@@ -44,15 +44,26 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 4000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/hopeline';
 
-// Connect to MongoDB and start the server
-mongoose.connect(MONGO_URI)
-  .then(() => {
+// For Vercel Serverless: Connect to DB once
+let isConnected = false;
+const connectDB = async () => {
+  if (isConnected) return;
+  try {
+    await mongoose.connect(MONGO_URI);
+    isConnected = true;
     console.log('Connected to MongoDB successfully');
+  } catch (err) {
+    console.error('MongoDB connection error:', err);
+  }
+};
+
+// If not on Vercel, start the server normally
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  connectDB().then(() => {
     const server = app.listen(PORT, '0.0.0.0', () => {
       console.log(`Server is running on http://localhost:${PORT}`);
     });
 
-    // Handle server errors
     server.on('error', (error) => {
       if (error.code === 'EADDRINUSE') {
         console.error(`Port ${PORT} is already in use`);
@@ -61,8 +72,13 @@ mongoose.connect(MONGO_URI)
       }
       process.exit(1);
     });
-  })
-  .catch((err) => {
-    console.error('MongoDB connection error:', err);
-    process.exit(1);
   });
+}
+
+// Ensure DB connects middleware-style for Vercel
+app.use(async (req, res, next) => {
+  await connectDB();
+  next();
+});
+
+export default app;
