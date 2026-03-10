@@ -42,20 +42,31 @@ app.use('/api/student', studentRoutes); // Add the new student routes
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 4000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/hopeline';
+const MONGO_URI = process.env.MONGO_URI || process.env.MONGODB_URI;
 
 // For Vercel Serverless: Connect to DB once
 let isConnected = false;
 const connectDB = async () => {
-  if (isConnected) return;
+  if (isConnected && mongoose.connection.readyState === 1) return;
+
+  if (!MONGO_URI) {
+    console.error('CRITICAL: MONGO_URI is not defined in environment variables!');
+    throw new Error('Database configuration missing (MONGO_URI)');
+  }
+
   try {
+    console.log('Attempting to connect to MongoDB...');
+    // Log a masked version of the URI for debugging
+    const maskedURI = MONGO_URI.replace(/:([^@]+)@/, ':****@');
+    console.log(`Using URI: ${maskedURI.substring(0, 30)}...`);
+
     await mongoose.connect(MONGO_URI, {
       serverSelectionTimeoutMS: 5000,
     });
     isConnected = true;
     console.log('Connected to MongoDB successfully');
   } catch (err) {
-    console.error('MongoDB connection error:', err);
+    console.error('MongoDB connection error details:', err.message);
     throw err;
   }
 };
