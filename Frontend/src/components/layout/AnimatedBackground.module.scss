@@ -1,0 +1,76 @@
+.container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+    background-color: #0a0a0a;
+  }
+  
+  .gradientBg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, var(--bg-grad-1) 0%, var(--bg-grad-2) 70%);
+    opacity: 0.9;
+  }
+  
+  .blobs {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    filter: blur(60px); // This creates the soft, merged look
+  }
+  
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    
+    // Blob colors from your design system
+    &:nth-child(1) {
+      width: 450px;
+      height: 450px;
+      background: rgba(102, 178, 178, 0.3); // --primary
+      animation: move 25s infinite alternate;
+      top: -10%;
+      left: -15%;
+    }
+  
+    &:nth-child(2) {
+      width: 350px;
+      height: 350px;
+      background: rgba(139, 92, 246, 0.25); // --secondary
+      animation: move 30s infinite alternate-reverse;
+      bottom: -5%;
+      right: -10%;
+    }
+  
+    &:nth-child(3) {
+      width: 250px;
+      height: 250px;
+      background: rgba(74, 97, 211, 0.3);
+      animation: move 28s infinite alternate;
+      top: 30%;
+      right: 20%;
+    }
+    
+    &:nth-child(4) {
+      width: 200px;
+      height: 200px;
+      background: rgba(102, 178, 178, 0.2); // --primary
+      animation: move 32s infinite alternate-reverse;
+      bottom: 25%;
+      left: 15%;
+    }
+  }
+  
+  @keyframes move {
+    from {
+      transform: translate(0, 0) scale(1);
+    }
+    to {
+      transform: translate(200px, 100px) scale(1.2);
+    }
+  }
