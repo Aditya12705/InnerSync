@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 const assessmentSchema = new mongoose.Schema({
   studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  type: { type: String, enum: ['PHQ-9', 'GAD-7', 'GHQ-12', 'combined'], required: true },
+  type: { type: String, enum: ['PHQ-9', 'GAD-7', 'GHQ-12', 'COMBINED', 'combined'], required: true },
   responses: [{
     questionId: { type: String },
     question: { type: String, required: true },

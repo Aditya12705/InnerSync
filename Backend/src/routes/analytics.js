@@ -7,6 +7,7 @@ import Assessment from '../models/Assessment.js'
 import SystemLog from '../models/SystemLog.js'
 import { protectRoute } from '../middleware/protectRoute.js'
 import { sendNotificationEmail } from '../utils/email.js'
+import { sendWhatsAppNotification } from '../utils/whatsapp.js'
 
 const router = Router()
 
@@ -77,6 +78,9 @@ router.post('/assessments/submit', protectRoute, async (req, res) => {
         </div>
       `;
       sendNotificationEmail(subject, htmlContent).catch(console.error);
+
+      const waMessage = `*New Assessment Submitted 📝*\n\nStudent: ${student.name} (${student.email})\nTest: ${type.toUpperCase()}\nScore: ${totalScore}\nSeverity: ${severity.toUpperCase()}`;
+      sendWhatsAppNotification(waMessage).catch(console.error);
     }
 
     res.status(201).json({ message: 'Assessment submitted successfully', assessment: newAssessment });

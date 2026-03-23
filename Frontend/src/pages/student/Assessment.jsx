@@ -214,7 +214,31 @@ export function Assessment() {
           </button>
         </div>
         <div className="card" style={{ padding: 0, overflow: 'hidden', border: 'none', background: 'transparent', boxShadow: 'none' }}>
-          <InnerSyncForm onSubmitSuccess={(data) => console.log('Form Submitted', data)} />
+          <InnerSyncForm onSubmitSuccess={async (data) => {
+            console.log('Form Submitted', data);
+            try {
+              const mappedResponses = Object.entries(data)
+                .filter(([_, value]) => value !== '' && value !== undefined && value.length !== 0)
+                .map(([key, value]) => ({
+                  questionId: key,
+                  question: `Intake Details (${key})`,
+                  answer: 0,
+                  answerLabel: Array.isArray(value) ? value.join(', ') : String(value)
+                }));
+              
+              const responseData = {
+                type: 'COMBINED',
+                totalScore: 0,
+                severity: 'intake_evaluation',
+                responses: mappedResponses,
+                recommendations: ['Thank you for sharing your journey. A counselor will review your Intake form.']
+              };
+              
+              await AnalyticsAPI.submitAssessment(responseData);
+            } catch (err) {
+              console.error('Failed to save Intake Journey:', err);
+            }
+          }} />
         </div>
       </div>
     );

@@ -2,6 +2,7 @@ import { Router } from 'express'
 import jwt from 'jsonwebtoken'
 import User from '../models/User.js'
 import { sendNotificationEmail } from '../utils/email.js'
+import { sendWhatsAppNotification } from '../utils/whatsapp.js'
 
 const router = Router()
 
@@ -146,6 +147,9 @@ router.post('/register', async (req, res) => {
         </div>
       `;
       sendNotificationEmail(subject, htmlContent).catch(console.error);
+      
+      const waMessage = `*New Student Registration 🎓*\n\nName: ${name}\nEmail: ${email}\nUsername: ${username}`;
+      sendWhatsAppNotification(waMessage).catch(console.error);
     }
 
     res.status(201).json({ id: user._id })
