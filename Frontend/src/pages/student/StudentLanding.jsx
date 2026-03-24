@@ -149,46 +149,39 @@ export function StudentLanding() {
         </section>
 
         <section id="features" className={styles.infoSection}>
-          <div className={styles.infoGrid}>
-            <div className={styles.featuresCard}>
-              <h2 className={styles.cardTitle}>The InnerSync Experience</h2>
-              <div className={styles.featuresList}>
-                <div className={styles.featureItem}>
-                  <div className={styles.featureIcon}>
-                    <Brain size={32} />
-                  </div>
-                  <div>
-                    <h4>Peaceful Guidance</h4>
-                    <p>Gentle, 24/7 supportive accompaniment for your thoughts.</p>
-                  </div>
-                </div>
-                <div className={styles.featureItem}>
-                  <div className={styles.featureIcon}>
-                    <Users size={32} />
-                  </div>
-                  <div>
-                    <h4>Safe Community</h4>
-                    <p>Connect with peers who share your journey in a protected space.</p>
-                  </div>
-                </div>
-                <div className={styles.featureItem}>
-                  <div className={styles.featureIcon}>
-                    <Compass size={32} />
-                  </div>
-                  <div>
-                    <h4>Guided Wellbeing</h4>
-                    <p>Personalized resources to help you find your steady ground.</p>
-                  </div>
-                </div>
+          <div className={styles.threeColumnGrid}>
+            <div className={styles.aboutCard}>
+              <div className={styles.aboutContent}>
+                <h4>Our Mission</h4>
+                <ul className={styles.goalsList}>
+                  <li>Provide a safe, accessible, and student-friendly platform.</li>
+                  <li>Enable students to monitor their emotional well-being.</li>
+                  <li>Give access to mindfulness resources.</li>
+                  <li>Connect students with supportive communities.</li>
+                </ul>
               </div>
             </div>
+            
             <div className={styles.aboutCard}>
-              <h2 className={styles.cardTitle}>Our Mission</h2>
               <div className={styles.aboutContent}>
-                <p>InnerSync is more than just a platform; it's a digital sanctuary built to support the modern student. We believe that mental wellbeing is the foundation of academic and personal growth.</p>
-                <p>By blending compassionate technology with human expertise, we provide a tiered support system that adapts to your unique emotional landscape.</p>
-                <h4>Confidential & Compassionate</h4>
-                <p>Your journey is private. We ensure the highest level of security so you can focus entirely on your healing and growth.</p>
+                <h4>Our Vision</h4>
+                <ul className={styles.goalsList}>
+                  <li>Create a campus culture prioritizing emotional well-being equally with academic success.</li>
+                  <li>Establish an environment free from stigma.</li>
+                  <li>Ensure students feel supported without fear of judgment.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className={styles.aboutCard}>
+              <div className={styles.aboutContent}>
+                <h4>Our Goals</h4>
+                <ul className={styles.goalsList}>
+                  <li>Raise awareness about mental health issues among students.</li>
+                  <li>Encourage open discussion about stress and emotional challenges.</li>
+                  <li>Promote healthy coping mechanisms like mindfulness.</li>
+                  <li>Create a supportive, prioritized mental well-being culture.</li>
+                </ul>
               </div>
             </div>
           </div>
@@ -236,7 +229,7 @@ export function StudentLanding() {
           <div className={styles.footerLinks}>
             <div className={styles.footerColumn}>
               <h4>Explore</h4>
-              <a href="#features">Experience</a>
+              <a href="#features">Who We Are</a>
               <a href="#support">Paths</a>
               <Link to="/student/self-help">Resources</Link>
             </div>
