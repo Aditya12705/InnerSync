@@ -4,7 +4,8 @@ const router = Router()
 
 router.post('/chat', async (req, res) => {
   const { messages = [], lang = 'en' } = req.body || {};
-  const apiKey = process.env.GROQ_API_KEY;
+  const rawKey = process.env.GROQ_API_KEY || '';
+  const apiKey = rawKey.trim().replace(/^["']|["']$/g, '');
   if (!apiKey) {
     return res.status(500).json({ message: 'Missing GROQ_API_KEY' });
   }
@@ -63,43 +64,71 @@ Example Phase 2:
   ];
 
   const url = 'https://api.groq.com/openai/v1/chat/completions';
-  const payload = {
-    model: 'llama-3.1-8b-instant',
-    messages: groqMessages,
-    temperature: 0.85,
-    max_tokens: 300,
-    top_p: 0.95,
-  };
+  
+  // Prioritize active models supported by Groq account
+  const candidateModels = [
+    process.env.GROQ_MODEL,
+    'openai/gpt-oss-20b',
+    'qwen/qwen3.8-27b',
+    'openai/gpt-oss-120b',
+    'llama-3.3-70b-versatile',
+    'llama-3.1-8b-instant'
+  ].filter(Boolean);
+  const models = [...new Set(candidateModels)];
 
-  try {
-    const apiResponse = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify(payload),
-    });
+  let lastError = null;
+  let text = null;
 
-    if (!apiResponse.ok) {
-      const errorText = await apiResponse.text();
-      console.error('Groq API Error:', errorText);
-      throw new Error('Failed to get response from AI assistant.');
+  for (const model of models) {
+    try {
+      const payload = {
+        model,
+        messages: groqMessages,
+        temperature: 0.85,
+        max_tokens: 300,
+        top_p: 0.95,
+      };
+
+      const apiResponse = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!apiResponse.ok) {
+        const errorText = await apiResponse.text();
+        console.error(`Groq API Error (${model}):`, errorText);
+        lastError = new Error(`Groq [${model}]: ${errorText}`);
+        continue;
+      }
+
+      const data = await apiResponse.json();
+      text = data?.choices?.[0]?.message?.content || "I'm not sure how to respond to that. Could you tell me more?";
+      break;
+    } catch (err) {
+      console.error(`Fetch error with model ${model}:`, err);
+      lastError = err;
     }
-
-    const data = await apiResponse.json();
-    const text = data?.choices?.[0]?.message?.content || "I'm not sure how to respond to that. Could you tell me more?";
-    res.json({ reply: text });
-
-  } catch (e) {
-    console.error('Error calling AI chat:', e);
-    const fallback = {
-      en: "I'm having a little trouble connecting right now. Please know that your feelings are valid, and I'm here for you. 💙 If things feel urgent, please use the Crisis Alert.",
-      hi: 'मुझे अभी कनेक्ट होने में थोड़ी दिक्कत हो रही है। कृपया जान लें कि आपकी भावनाएँ मान्य हैं और मैं आपके लिए यहाँ हूँ। यदि यह जरूरी है, तो कृपया संकट चेतावनी का उपयोग करें।',
-    };
-    const text = fallback[lang] || fallback.en;
-    res.status(200).json({ reply: text, degraded: true });
   }
+
+  if (text) {
+    return res.json({ reply: text });
+  }
+
+  console.error('All Groq models failed. Last error:', lastError);
+  const fallback = {
+    en: "I'm having a little trouble connecting right now. Please know that your feelings are valid, and I'm here for you. 💙 If things feel urgent, please use the Crisis Alert.",
+    hi: 'मुझे अभी कनेक्ट होने में थोड़ी दिक्कत हो रही है। कृपया जान लें कि आपकी भावनाएँ मान्य हैं और मैं आपके लिए यहाँ हूँ। यदि यह जरूरी है, तो कृपया संकट चेतावनी का उपयोग करें।',
+  };
+  const fallbackText = fallback[lang] || fallback.en;
+  res.status(200).json({ 
+    reply: fallbackText, 
+    degraded: true, 
+    error: lastError?.message 
+  });
 });
 
 export default router;
